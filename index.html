@@ -42,8 +42,8 @@
 <body class="bg-ink text-neutral-100 min-h-screen antialiased">
 
   <!-- ===== Header ===== -->
-  <header class="px-8 pt-6">
-    <div class="flex items-center justify-between">
+  <header class="px-4 sm:px-8 pt-6">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-lg bg-brand-red flex items-center justify-center font-cjk text-white text-2xl font-bold leading-none shadow-card">
           汉
@@ -54,7 +54,7 @@
         </div>
       </div>
 
-      <div class="flex items-center gap-5 text-sm">
+      <div class="flex items-center gap-4 sm:gap-5 text-sm flex-wrap">
         <div class="flex items-center gap-2">
           <span class="w-2 h-2 rounded-full bg-ok"></span>
           <span class="text-dim">Dễ</span>
@@ -75,14 +75,14 @@
   </header>
 
   <!-- ===== Sub-header / Day selector ===== -->
-  <section class="px-8 mt-5">
-    <div class="flex items-start justify-between gap-6">
-      <div class="flex items-center gap-3">
+  <section class="px-4 sm:px-8 mt-5">
+    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6">
+      <div class="flex items-center gap-3 flex-wrap">
         <div class="flex items-stretch rounded-xl bg-card border border-line overflow-hidden">
           <button id="day-prev" class="px-3 hover:bg-white/5 transition text-neutral-400" title="Ngày trước (P)">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
           </button>
-          <div class="px-5 py-2.5 text-center leading-tight border-l border-r border-line">
+          <div class="px-5 py-2.5 text-center leading-tight border-l border-r border-line whitespace-nowrap">
             <div class="text-[10px] tracking-[0.18em] text-dim uppercase" id="day-label">Ngày 1 /</div>
             <div class="text-sm font-medium">
               <span class="font-cjk text-brand-red" id="day-theme-zh">家人</span>
@@ -101,7 +101,7 @@
         </button>
       </div>
 
-      <div class="text-right leading-tight">
+      <div class="text-left sm:text-right leading-tight">
         <div class="text-[10px] tracking-[0.18em] text-dim uppercase">Chủ đề</div>
         <div class="text-sm font-medium" id="topic-name">Gia đình</div>
         <div class="text-xs text-dim mt-2"><span id="card-progress">0 / 10</span> thẻ</div>
@@ -112,14 +112,14 @@
   </section>
 
   <!-- ===== Main card area ===== -->
-  <main class="px-8 mt-10">
+  <main class="px-4 sm:px-8 mt-6 sm:mt-10">
     <div class="relative max-w-3xl mx-auto">
 
       <!-- Side arrows -->
-      <button id="card-prev" class="absolute -left-16 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-card border border-line hover:bg-white/10 transition flex items-center justify-center text-neutral-300" title="Thẻ trước (←)">
+      <button id="card-prev" class="absolute left-2 sm:-left-16 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-card border border-line hover:bg-white/10 transition flex items-center justify-center text-neutral-300 z-10" title="Thẻ trước (←)">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
       </button>
-      <button id="card-next" class="absolute -right-16 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-card border border-line hover:bg-white/10 transition flex items-center justify-center text-neutral-300" title="Thẻ kế (→)">
+      <button id="card-next" class="absolute right-2 sm:-right-16 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-card border border-line hover:bg-white/10 transition flex items-center justify-center text-neutral-300 z-10" title="Thẻ kế (→)">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       </button>
 
@@ -128,14 +128,14 @@
         <div class="card-inner">
 
           <!-- FRONT -->
-          <div class="card-face card-front bg-card2 border border-line rounded-2xl shadow-card cursor-pointer select-none p-8">
+          <div class="card-face card-front bg-card2 border border-line rounded-2xl shadow-card cursor-pointer select-none p-5 sm:p-8">
             <div class="flex items-start justify-between">
               <span class="px-3 py-1 rounded-full bg-white/5 border border-line text-[11px] italic text-neutral-400" id="front-type">danh từ</span>
               <span class="text-xs text-dim hidden" id="front-empty-hint"></span>
             </div>
 
             <div class="h-full flex flex-col items-center justify-center -mt-6">
-              <div class="font-cjk font-bold text-[88px] leading-none text-brand-red tracking-wide" id="front-word">妈妈</div>
+              <div class="font-cjk font-bold text-6xl sm:text-[88px] leading-none text-brand-red tracking-wide" id="front-word">妈妈</div>
               <div class="mt-5 flex items-center gap-3">
                 <div class="text-2xl text-neutral-200" id="front-pinyin">māma</div>
                 <button class="speaker text-neutral-400 hover:text-white transition" data-target="front-word" title="Phát âm">
@@ -150,12 +150,12 @@
           </div>
 
           <!-- BACK -->
-          <div class="card-face card-back bg-card2 border border-line rounded-2xl shadow-card cursor-pointer select-none p-8">
+          <div class="card-face card-back bg-card2 border border-line rounded-2xl shadow-card cursor-pointer select-none p-5 sm:p-8">
             <div class="flex items-start justify-between">
               <span class="px-3 py-1 rounded-full bg-white/5 border border-line text-[11px] italic text-neutral-400" id="back-type">danh từ</span>
             </div>
 
-            <div class="mt-2 flex items-center gap-3">
+            <div class="mt-2 flex items-center gap-3 flex-wrap">
               <div class="font-cjk font-bold text-4xl text-brand-red leading-none" id="back-word">妈妈</div>
               <div class="text-xl text-neutral-300" id="back-pinyin">māma</div>
               <button class="speaker text-neutral-400 hover:text-white transition" data-target="back-word" title="Phát âm">
@@ -191,20 +191,20 @@
     </div>
 
     <!-- Rating bar -->
-    <div class="mt-10 flex items-center justify-center gap-3">
-      <button class="rate-btn group flex items-center gap-3 px-8 py-3 rounded-xl bg-card border border-line hover:border-bad/50 hover:bg-bad/5 transition" data-level="hard">
+    <div class="mt-8 sm:mt-10 flex items-center justify-center gap-2 sm:gap-3">
+      <button class="rate-btn group flex items-center gap-3 px-5 sm:px-8 py-3 rounded-xl bg-card border border-line hover:border-bad/50 hover:bg-bad/5 transition" data-level="hard">
         <span>Khó</span><span class="kbd group-hover:border-bad/60">1</span>
       </button>
-      <button class="rate-btn group flex items-center gap-3 px-8 py-3 rounded-xl bg-card border border-line hover:border-warn/50 hover:bg-warn/5 transition" data-level="medium">
+      <button class="rate-btn group flex items-center gap-3 px-5 sm:px-8 py-3 rounded-xl bg-card border border-line hover:border-warn/50 hover:bg-warn/5 transition" data-level="medium">
         <span>Vừa</span><span class="kbd group-hover:border-warn/60">2</span>
       </button>
-      <button class="rate-btn group flex items-center gap-3 px-8 py-3 rounded-xl bg-card border border-line hover:border-ok/50 hover:bg-ok/5 transition" data-level="easy">
+      <button class="rate-btn group flex items-center gap-3 px-5 sm:px-8 py-3 rounded-xl bg-card border border-line hover:border-ok/50 hover:bg-ok/5 transition" data-level="easy">
         <span>Dễ</span><span class="kbd group-hover:border-ok/60">3</span>
       </button>
     </div>
 
     <!-- Keyboard hint -->
-    <div class="mt-5 mb-10 flex items-center justify-center gap-6 text-xs text-dim">
+    <div class="mt-5 mb-10 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 sm:gap-6 text-xs text-dim">
       <span class="flex items-center gap-1.5"><span class="kbd">←</span> Trước</span>
       <span class="flex items-center gap-1.5"><span class="kbd">→</span> Sau</span>
       <span class="flex items-center gap-1.5"><span class="kbd">Space</span> Lật</span>
@@ -216,7 +216,7 @@
   <div id="picker" class="modal-hidden fixed inset-0 z-50">
     <div class="modal-overlay absolute inset-0 bg-black/70 backdrop-blur-sm" id="picker-overlay"></div>
     <div class="absolute inset-0 flex items-start justify-center p-6 overflow-y-auto">
-      <div class="modal-panel relative mt-10 w-full max-w-3xl bg-card2 border border-line rounded-2xl shadow-card p-8">
+      <div class="modal-panel relative mt-10 w-full max-w-3xl bg-card2 border border-line rounded-2xl shadow-card p-5 sm:p-8">
         <button id="picker-close" class="absolute top-5 right-5 w-9 h-9 rounded-lg border border-line hover:bg-white/5 transition flex items-center justify-center text-neutral-300">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
