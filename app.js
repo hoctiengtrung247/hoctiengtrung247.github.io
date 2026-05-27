@@ -212,9 +212,9 @@
   // ---------- Modal ----------
   function buildPickerGrid() {
     const groups = [
-      { hsk: 1, label: "HSK 1", range: [1, 30] },
-      { hsk: 2, label: "HSK 2", range: [31, 60] },
-      { hsk: 3, label: "HSK 3", range: [61, data.days.length] },
+      { hsk: 1, label: "1-3 nét", range: [1, 6] },
+      { hsk: 2, label: "4-5 nét", range: [7, 12] },
+      { hsk: 3, label: "6+ nét", range: [13, data.days.length] },
     ];
     els.pickerGrid.innerHTML = groups.map((g) => {
       const cells = [];
