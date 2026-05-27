@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Học từ vựng tiếng Anh - Claude Builder</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>📚 Từ vựng Claude Builder</h1>
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-view="today" role="tab">Hôm nay</button>
+      <button class="tab" data-view="topics" role="tab">Chủ đề</button>
+      <button class="tab" data-view="progress" role="tab">Tiến độ</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- VIEW: HÔM NAY -->
+    <section id="view-today" class="view active">
+      <div class="progress-bar-wrap">
+        <div class="progress-bar"><div id="todayBar" class="progress-fill"></div></div>
+        <div class="progress-text"><span id="todayCount">0</span>/<span id="todayTotal">0</span> từ hôm nay</div>
+      </div>
+
+      <div id="cardArea" class="card-area">
+        <div id="flashcard" class="flashcard">
+          <div class="card-face card-front">
+            <div class="word-topic" id="cardTopic"></div>
+            <div class="word-main" id="cardWord">—</div>
+            <div class="word-ipa" id="cardIpa"></div>
+            <div class="word-pos" id="cardPos"></div>
+            <div class="card-actions">
+              <button class="btn-speak" id="btnSpeak" aria-label="Phát âm">🔊</button>
+              <button class="btn-primary" id="btnFlip">Lật thẻ</button>
+            </div>
+            <div class="card-hint">Nháy thẻ để lật</div>
+          </div>
+          <div class="card-face card-back">
+            <div class="back-section">
+              <div class="back-label">Nghĩa thường ngày</div>
+              <div id="cardEveryday" class="back-text"></div>
+            </div>
+            <div class="back-section back-section-ai">
+              <div class="back-label">Nghĩa trong AI 🤖</div>
+              <div id="cardAi" class="back-text"></div>
+            </div>
+            <div class="back-section">
+              <div class="back-label">Ví dụ</div>
+              <div id="cardExampleEn" class="back-text back-example"></div>
+              <div id="cardExampleVi" class="back-text back-example-vi"></div>
+            </div>
+            <div class="back-section back-tip">
+              <div class="back-label">💡 Mẹo</div>
+              <div id="cardTip" class="back-text"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="rateButtons" class="rate-buttons hidden">
+          <button class="btn-rate btn-hard" data-rate="hard">😣 Khó<br><small>1 ngày</small></button>
+          <button class="btn-rate btn-normal" data-rate="normal">🙂 Bình thường<br><small>vài ngày</small></button>
+          <button class="btn-rate btn-easy" data-rate="easy">😎 Dễ<br><small>1 tuần+</small></button>
+        </div>
+      </div>
+
+      <div id="doneArea" class="done-area hidden">
+        <div class="done-emoji">🎉</div>
+        <h2>Xong hôm nay rồi!</h2>
+        <p>Quay lại vào ngày mai để học tiếp.</p>
+        <p class="done-stat" id="doneStat"></p>
+      </div>
+
+      <div class="settings-row">
+        <label for="perDay">Số từ học/ngày:</label>
+        <input type="number" id="perDay" min="3" max="30" value="7" />
+      </div>
+    </section>
+
+    <!-- VIEW: CHỦ ĐỀ -->
+    <section id="view-topics" class="view">
+      <div id="topicGrid" class="topic-grid"></div>
+      <div id="topicDetail" class="topic-detail hidden">
+        <button class="btn-back" id="btnBackTopics">← Quay lại</button>
+        <h2 id="topicDetailTitle"></h2>
+        <div id="topicWordList" class="word-list"></div>
+      </div>
+      <div id="wordDetail" class="word-detail hidden">
+        <button class="btn-back" id="btnBackWordList">← Quay lại</button>
+        <div id="wordDetailContent"></div>
+      </div>
+    </section>
+
+    <!-- VIEW: TIẾN ĐỘ -->
+    <section id="view-progress" class="view">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-num" id="statLearned">0</div>
+          <div class="stat-label">Từ đã học</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="statMastered">0</div>
+          <div class="stat-label">Từ đã thuộc</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="statStreak">0</div>
+          <div class="stat-label">Ngày liên tục 🔥</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" id="statTotal">0</div>
+          <div class="stat-label">Tổng số từ</div>
+        </div>
+      </div>
+      <div class="topic-progress" id="topicProgressList"></div>
+      <button class="btn-danger" id="btnReset">⚠️ Xóa tiến độ</button>
+    </section>
+  </main>
+
+  <script src="vocabulary.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
