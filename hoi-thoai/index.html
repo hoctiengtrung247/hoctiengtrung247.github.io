@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Học Tiếng Trung 247 — Hội thoại Msutong B1</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: "#0a0a0a",
+            card: "#161616",
+            card2: "#1c1c1c",
+            line: "rgba(255,255,255,0.08)",
+            brand: { red: "#dc2626", redSoft: "#ef4444" },
+            ok: "#22c55e",
+            warn: "#eab308",
+            bad: "#ef4444",
+            muted: "#9ca3af",
+            dim: "#6b7280",
+          },
+          boxShadow: {
+            card: "0 10px 40px -10px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04)",
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-ink text-neutral-100 min-h-screen antialiased">
+
+  <!-- ===== Header ===== -->
+  <header class="px-4 sm:px-8 pt-6">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <a href="../" class="flex items-center gap-3 hover:opacity-80 transition">
+        <div class="w-10 h-10 rounded-lg bg-brand-red flex items-center justify-center font-cjk text-white text-2xl font-bold leading-none shadow-card">
+          话
+        </div>
+        <div class="leading-tight">
+          <div class="font-semibold">Học Tiếng Trung 247</div>
+          <div class="text-xs text-dim">Hội thoại · Msutong Sơ cấp B1</div>
+        </div>
+      </a>
+
+      <div class="flex items-center gap-4 sm:gap-5 text-sm flex-wrap">
+        <div class="flex items-center gap-2">
+          <span class="text-dim">Đã học</span>
+          <span class="font-semibold tabular-nums" id="stat-completed">0</span>
+          <span class="text-dim">/ <span id="stat-total">20</span></span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== Sub-header / Lesson selector ===== -->
+  <section class="px-4 sm:px-8 mt-5">
+    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6">
+      <div class="flex items-center gap-3 flex-wrap">
+        <div class="flex items-stretch rounded-xl bg-card border border-line overflow-hidden">
+          <button id="lesson-prev" class="px-3 hover:bg-white/5 transition text-neutral-400" title="Bài trước (P)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <div class="px-5 py-2.5 text-center leading-tight border-l border-r border-line whitespace-nowrap">
+            <div class="text-[10px] tracking-[0.18em] text-dim uppercase" id="lesson-label">Bài 1 · Bài khóa (1)</div>
+            <div class="text-sm font-medium">
+              <span class="font-cjk text-brand-red" id="lesson-title-zh">你好！</span>
+              <span class="text-neutral-300"> · </span>
+              <span id="lesson-title-vi">Xin chào!</span>
+            </div>
+          </div>
+          <button id="lesson-next" class="px-3 hover:bg-white/5 transition text-neutral-400" title="Bài kế (N)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+
+        <button id="open-picker" class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-card border border-line hover:bg-white/5 transition text-sm">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          Tất cả 20 bài
+        </button>
+      </div>
+
+      <div class="text-left sm:text-right leading-tight">
+        <div class="text-[10px] tracking-[0.18em] text-dim uppercase">Số câu</div>
+        <div class="text-sm font-medium tabular-nums" id="exchange-count">0 câu</div>
+      </div>
+    </div>
+
+    <div class="mt-4 h-px bg-line"></div>
+  </section>
+
+  <!-- ===== Main: chat bubbles ===== -->
+  <main class="px-4 sm:px-8 mt-6 sm:mt-8 pb-16">
+    <div class="max-w-3xl mx-auto">
+
+      <!-- Toolbar -->
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+        <button id="play-all" class="play-all-btn" title="Đọc tuần tự cả đoạn hội thoại">
+          <svg id="play-all-icon-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+          <svg id="play-all-icon-stop" class="hidden" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+          <span id="play-all-label">Phát cả đoạn</span>
+        </button>
+
+        <div class="flex items-center gap-2 flex-wrap">
+          <label class="toggle-chip" id="chip-pinyin">
+            <input type="checkbox" id="toggle-pinyin" checked />
+            <span>Pinyin</span>
+          </label>
+          <label class="toggle-chip" id="chip-vi">
+            <input type="checkbox" id="toggle-vi" checked />
+            <span>Tiếng Việt</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Bubble container — generated by app.js -->
+      <div id="exchanges" class="flex flex-col gap-4"></div>
+
+      <!-- Empty state -->
+      <div id="empty-state" class="hidden text-center py-16">
+        <div class="font-cjk text-5xl text-neutral-700">空</div>
+        <div class="mt-3 text-neutral-300 font-medium">Chưa có dữ liệu cho bài này</div>
+      </div>
+
+      <!-- Bottom navigation -->
+      <div class="mt-10 flex items-center justify-between gap-3">
+        <button id="bottom-prev" class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-card border border-line hover:bg-white/5 transition text-sm">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+          <span>Bài trước</span>
+        </button>
+        <button id="bottom-done" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-card border border-line hover:border-ok/50 hover:bg-ok/5 transition text-sm">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          <span id="bottom-done-label">Đánh dấu đã học</span>
+        </button>
+        <button id="bottom-next" class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-card border border-line hover:bg-white/5 transition text-sm">
+          <span>Bài kế</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+      <!-- Keyboard hint -->
+      <div class="mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 sm:gap-6 text-xs text-dim">
+        <span class="flex items-center gap-1.5"><span class="kbd">←</span> Bài trước</span>
+        <span class="flex items-center gap-1.5"><span class="kbd">→</span> Bài kế</span>
+        <span class="flex items-center gap-1.5"><span class="kbd">Space</span> Phát/Dừng cả đoạn</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== Lesson picker modal ===== -->
+  <div id="picker" class="modal-hidden fixed inset-0 z-50">
+    <div class="modal-overlay absolute inset-0 bg-black/70 backdrop-blur-sm" id="picker-overlay"></div>
+    <div class="absolute inset-0 flex items-start justify-center p-6 overflow-y-auto">
+      <div class="modal-panel relative mt-10 w-full max-w-2xl bg-card2 border border-line rounded-2xl shadow-card p-5 sm:p-8">
+        <button id="picker-close" class="absolute top-5 right-5 w-9 h-9 rounded-lg border border-line hover:bg-white/5 transition flex items-center justify-center text-neutral-300">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <div class="leading-tight">
+          <div class="text-lg font-semibold">Chọn bài hội thoại</div>
+          <div class="text-sm text-dim">Msutong Sơ cấp B1 · 10 Bài · 20 đoạn</div>
+        </div>
+
+        <div id="picker-grid" class="mt-6 space-y-5"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

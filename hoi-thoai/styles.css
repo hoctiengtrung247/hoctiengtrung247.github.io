@@ -1,0 +1,230 @@
+/* Base — đồng bộ với tu-vung */
+html, body {
+  background: #0a0a0a;
+  color: #f5f5f5;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-feature-settings: "cv11", "ss01";
+}
+
+.font-cjk {
+  font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+}
+
+/* Modal slide-in */
+.modal-overlay { transition: opacity .2s ease; }
+.modal-panel  { transition: transform .25s ease, opacity .25s ease; }
+.modal-hidden { pointer-events: none; }
+.modal-hidden .modal-overlay { opacity: 0; }
+.modal-hidden .modal-panel   { transform: translateY(12px) scale(.98); opacity: 0; }
+
+/* Lesson cell trong picker */
+.lesson-cell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.02);
+  color: #d4d4d4;
+  cursor: pointer;
+  text-align: left;
+  transition: background .15s, border-color .15s, color .15s;
+  width: 100%;
+}
+.lesson-cell:hover {
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.18);
+  color: #fff;
+}
+.lesson-cell.is-current {
+  border-color: #dc2626;
+  color: #fff;
+  box-shadow: 0 0 0 1px rgba(220,38,38,.4) inset;
+}
+.lesson-cell .part-tag {
+  font-size: 11px;
+  color: #9ca3af;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Key chips */
+.kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  font-size: 11px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 6px;
+  color: #d4d4d4;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,.08); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.16); }
+
+/* Fade in cho exchange container khi đổi bài */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.fade-in { animation: fadeIn .25s ease; }
+
+/* ===== Chat bubble ===== */
+.bubble-row {
+  display: flex;
+  width: 100%;
+}
+.bubble-row.row-right { justify-content: flex-end; }
+.bubble-row.row-left  { justify-content: flex-start; }
+
+.bubble {
+  max-width: min(85%, 640px);
+  padding: 12px 16px;
+  border-radius: 18px;
+  position: relative;
+  transition: box-shadow .2s ease, border-color .2s ease;
+}
+.bubble-left {
+  background: #1c1c1c;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-bottom-left-radius: 6px;
+}
+.bubble-right {
+  background: #2a1414;
+  border: 1px solid rgba(220,38,38,0.28);
+  border-bottom-right-radius: 6px;
+}
+.bubble.is-active {
+  box-shadow: 0 0 0 2px #dc2626, 0 8px 24px -8px rgba(220,38,38,0.5);
+  border-color: rgba(220,38,38,0.6);
+}
+
+.bubble .role-tag {
+  font-size: 11px;
+  color: #9ca3af;
+  margin-bottom: 4px;
+  letter-spacing: 0.04em;
+}
+.bubble-right .role-tag { text-align: right; }
+
+.bubble .ex-zh {
+  font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  font-size: 22px;
+  line-height: 1.35;
+  color: #f5f5f5;
+  font-weight: 500;
+  word-break: break-word;
+}
+.bubble-right .ex-zh { color: #fff; }
+
+.bubble .ex-pinyin {
+  font-style: italic;
+  color: #a3a3a3;
+  font-size: 14px;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+.bubble .ex-vi {
+  color: #d4d4d4;
+  font-size: 14px;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+body.hide-pinyin .ex-pinyin { display: none; }
+body.hide-vi .ex-vi { display: none; }
+
+.bubble .actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+  align-items: center;
+}
+.bubble-right .actions { justify-content: flex-end; }
+
+.bubble .actions button {
+  color: #a3a3a3;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 0;
+  border-radius: 6px;
+  transition: color .15s, background .15s;
+}
+.bubble .actions button:hover {
+  color: #fff;
+  background: rgba(255,255,255,0.06);
+}
+
+/* Recording state — tái dùng pattern tu-vung */
+.rec-btn.is-recording {
+  color: #ef4444 !important;
+  animation: pulse-rec 1.2s ease-in-out infinite;
+}
+@keyframes pulse-rec {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.45; }
+}
+.play-rec-btn.is-playing {
+  color: #22c55e !important;
+}
+
+/* Toggle switch nhỏ */
+.toggle-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.02);
+  color: #d4d4d4;
+  font-size: 13px;
+  cursor: pointer;
+  user-select: none;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.toggle-chip:hover {
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.18);
+}
+.toggle-chip input { accent-color: #dc2626; }
+.toggle-chip.is-off { color: #6b7280; }
+
+/* Play-all button */
+.play-all-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(220,38,38,0.4);
+  background: rgba(220,38,38,0.1);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+.play-all-btn:hover {
+  background: rgba(220,38,38,0.18);
+  border-color: rgba(220,38,38,0.6);
+}
+.play-all-btn.is-playing {
+  background: rgba(220,38,38,0.25);
+  border-color: #dc2626;
+}
+
+/* "Đã học" state cho nút mark-done */
+#bottom-done.is-done {
+  background: rgba(34,197,94,0.1);
+  border-color: rgba(34,197,94,0.5);
+  color: #fff;
+}
