@@ -3,11 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Học Tiếng Trung 247 — Flashcard HSK 1-3</title>
+  <title>Học Tiếng Trung 24/7 — Flashcard HSK</title>
+  <meta name="description" content="Flashcard học tiếng Trung cho người mới bắt đầu: từ vựng, bộ thủ, hội thoại." />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet" />
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -20,242 +21,125 @@
             card2: "#1c1c1c",
             line: "rgba(255,255,255,0.08)",
             brand: { red: "#dc2626", redSoft: "#ef4444" },
-            ok: "#22c55e",
-            warn: "#eab308",
-            bad: "#ef4444",
             muted: "#9ca3af",
             dim: "#6b7280",
           },
-          boxShadow: {
-            card: "0 10px 40px -10px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04)",
-          },
           fontFamily: {
             sans: ['Inter', 'system-ui', 'sans-serif'],
-            mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+            cn: ['"Noto Sans SC"', 'sans-serif'],
+          },
+          boxShadow: {
+            card: "0 10px 40px -10px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04)",
+            glow: "0 20px 60px -20px rgba(220,38,38,0.45)",
           },
         },
       },
     };
   </script>
-  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    html, body { background: #0a0a0a; }
+    body { font-family: 'Inter', system-ui, sans-serif; color: #e5e7eb; }
+    .hanzi { font-family: 'Noto Sans SC', sans-serif; }
+    .grad-bg {
+      background:
+        radial-gradient(800px 400px at 15% -10%, rgba(220,38,38,0.18), transparent 60%),
+        radial-gradient(700px 400px at 90% 0%, rgba(239,68,68,0.10), transparent 60%),
+        #0a0a0a;
+    }
+    .card-link:hover .arrow { transform: translateX(4px); }
+    .card-link:hover .hanzi-bg { opacity: 0.18; transform: scale(1.05); }
+  </style>
 </head>
-<body class="bg-ink text-neutral-100 min-h-screen antialiased">
 
-  <!-- ===== Header ===== -->
-  <header class="px-4 sm:px-8 pt-6">
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-lg bg-brand-red flex items-center justify-center font-cjk text-white text-2xl font-bold leading-none shadow-card">
-          汉
-        </div>
-        <div class="leading-tight">
-          <div class="font-semibold">Học Tiếng Trung 247</div>
-          <div class="text-xs text-dim">Bộ thủ · 22 ngày học</div>
-        </div>
+<body class="grad-bg min-h-screen">
+  <main class="max-w-5xl mx-auto px-5 sm:px-8 py-10 sm:py-16">
+
+    <!-- Header -->
+    <header class="text-center mb-10 sm:mb-14">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-line bg-card/60 text-xs text-muted mb-5">
+        <span class="hanzi text-brand-redSoft">汉</span>
+        <span>HSK 1 – 3 · Tiếng Trung cho người Việt</span>
       </div>
+      <h1 class="text-3xl sm:text-5xl font-bold tracking-tight">
+        Học Tiếng Trung <span class="text-brand-redSoft">24/7</span>
+      </h1>
+      <p class="mt-3 text-muted text-sm sm:text-base max-w-xl mx-auto">
+        Flashcard học tiếng Trung cho người mới bắt đầu. Chọn một chủ đề bên dưới để bắt đầu.
+      </p>
+    </header>
 
-      <div class="flex items-center gap-4 sm:gap-5 text-sm flex-wrap">
-        <div class="flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-ok"></span>
-          <span class="text-dim">Dễ</span>
-          <span class="font-semibold tabular-nums" id="stat-easy">0</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-warn"></span>
-          <span class="text-dim">Vừa</span>
-          <span class="font-semibold tabular-nums" id="stat-medium">0</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-bad"></span>
-          <span class="text-dim">Khó</span>
-          <span class="font-semibold tabular-nums" id="stat-hard">0</span>
-        </div>
-      </div>
-    </div>
-  </header>
+    <!-- Grid -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
 
-  <!-- ===== Sub-header / Day selector ===== -->
-  <section class="px-4 sm:px-8 mt-5">
-    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 sm:gap-6">
-      <div class="flex items-center gap-3 flex-wrap">
-        <div class="flex items-stretch rounded-xl bg-card border border-line overflow-hidden">
-          <button id="day-prev" class="px-3 hover:bg-white/5 transition text-neutral-400" title="Ngày trước (P)">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-          </button>
-          <div class="px-5 py-2.5 text-center leading-tight border-l border-r border-line whitespace-nowrap">
-            <div class="text-[10px] tracking-[0.18em] text-dim uppercase" id="day-label">Ngày 1 /</div>
-            <div class="text-sm font-medium">
-              <span class="font-cjk text-brand-red" id="day-theme-zh">家人</span>
-              <span class="text-neutral-300"> · </span>
-              <span id="day-theme-vi">Gia đình</span>
+      <!-- Từ vựng -->
+      <a href="./tu-vung/" class="card-link group relative overflow-hidden rounded-2xl bg-card border border-line shadow-card p-6 transition hover:border-brand-red/50 hover:shadow-glow">
+        <div class="hanzi-bg pointer-events-none absolute -right-4 -bottom-8 hanzi text-[160px] leading-none font-black text-white/5 transition duration-300">词</div>
+        <div class="relative">
+          <div class="flex items-center justify-between mb-6">
+            <div class="w-12 h-12 rounded-xl bg-brand-red/15 border border-brand-red/30 flex items-center justify-center">
+              <span class="hanzi text-2xl text-brand-redSoft font-bold">词</span>
             </div>
+            <span class="text-xs text-dim uppercase tracking-wider">cí</span>
           </div>
-          <button id="day-next" class="px-3 hover:bg-white/5 transition text-neutral-400" title="Ngày kế (N)">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-          </button>
-        </div>
-
-        <button id="open-picker" class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-card border border-line hover:bg-white/5 transition text-sm">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-          Tất cả 22 ngày
-        </button>
-      </div>
-
-      <div class="text-left sm:text-right leading-tight">
-        <div class="text-[10px] tracking-[0.18em] text-dim uppercase">Chủ đề</div>
-        <div class="text-sm font-medium" id="topic-name">Gia đình</div>
-        <div class="text-xs text-dim mt-2"><span id="card-progress">0 / 10</span> thẻ</div>
-      </div>
-    </div>
-
-    <div class="mt-4 h-px bg-line"></div>
-  </section>
-
-  <!-- ===== Main card area ===== -->
-  <main class="px-4 sm:px-8 mt-6 sm:mt-10">
-    <div class="relative max-w-3xl mx-auto">
-
-      <!-- Side arrows -->
-      <button id="card-prev" class="absolute left-2 sm:-left-16 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-card/70 sm:bg-card backdrop-blur-sm border border-line hover:bg-white/10 transition flex items-center justify-center text-neutral-300 z-10" title="Thẻ trước (←)">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-      </button>
-      <button id="card-next" class="absolute right-2 sm:-right-16 top-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-card/70 sm:bg-card backdrop-blur-sm border border-line hover:bg-white/10 transition flex items-center justify-center text-neutral-300 z-10" title="Thẻ kế (→)">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-      </button>
-
-      <!-- Flip card -->
-      <div id="flashcard" class="card-flip" style="height: 360px;">
-        <div class="card-inner">
-
-          <!-- FRONT -->
-          <div class="card-face card-front bg-card2 border border-line rounded-2xl shadow-card cursor-pointer select-none p-5 sm:p-8">
-            <div class="flex items-start justify-between">
-              <span class="px-3 py-1 rounded-full bg-white/5 border border-line text-[11px] italic text-neutral-400" id="front-type">danh từ</span>
-              <span class="text-xs text-dim hidden" id="front-empty-hint"></span>
-            </div>
-
-            <div class="h-full flex flex-col items-center justify-center -mt-6">
-              <div class="font-cjk font-bold text-6xl sm:text-[88px] leading-none text-brand-red tracking-wide" id="front-word">妈妈</div>
-              <div class="mt-5 flex items-center gap-3">
-                <div class="text-2xl text-neutral-200" id="front-pinyin">māma</div>
-                <button class="speaker text-neutral-400 hover:text-white transition" data-target="front-word" title="Phát âm">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
-                </button>
-                <button class="rec-btn text-neutral-400 hover:text-white transition" data-slot="word" title="Thu âm giọng bạn">
-                  <svg class="rec-icon-mic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="22"/></svg>
-                  <svg class="rec-icon-stop hidden" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
-                </button>
-                <button class="play-rec-btn text-neutral-400 hover:text-white transition hidden" data-slot="word" title="Nghe lại bản thu">
-                  <svg class="play-icon-play" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="6 4 20 12 6 20 6 4"/></svg>
-                  <svg class="play-icon-pause hidden" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
-                </button>
-              </div>
-            </div>
-
-            <div class="absolute bottom-5 right-6 text-xs text-dim flex items-center gap-2">
-              Nhấn để lật <span class="kbd">Space</span>
-            </div>
+          <h2 class="text-xl font-semibold mb-1">Từ vựng</h2>
+          <p class="text-sm text-muted mb-6">Học từ vựng HSK theo chủ đề với flashcard, ví dụ và phát âm.</p>
+          <div class="flex items-center gap-2 text-sm text-brand-redSoft font-medium">
+            <span>Bắt đầu</span>
+            <span class="arrow transition-transform">→</span>
           </div>
-
-          <!-- BACK -->
-          <div class="card-face card-back bg-card2 border border-line rounded-2xl shadow-card cursor-pointer select-none p-5 sm:p-8">
-            <div class="flex items-start justify-between">
-              <span class="px-3 py-1 rounded-full bg-white/5 border border-line text-[11px] italic text-neutral-400" id="back-type">danh từ</span>
-            </div>
-
-            <div class="mt-2 flex items-center gap-3 flex-wrap">
-              <div class="font-cjk font-bold text-4xl text-brand-red leading-none" id="back-word">妈妈</div>
-              <div class="text-xl text-neutral-300" id="back-pinyin">māma</div>
-              <button class="speaker text-neutral-400 hover:text-white transition" data-target="back-word" title="Phát âm">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-              </button>
-              <button class="rec-btn text-neutral-400 hover:text-white transition" data-slot="word" title="Thu âm giọng bạn">
-                <svg class="rec-icon-mic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="22"/></svg>
-                <svg class="rec-icon-stop hidden" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
-              </button>
-              <button class="play-rec-btn text-neutral-400 hover:text-white transition hidden" data-slot="word" title="Nghe lại bản thu">
-                <svg class="play-icon-play" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="6 4 20 12 6 20 6 4"/></svg>
-                <svg class="play-icon-pause hidden" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
-              </button>
-            </div>
-
-            <div class="mt-3 text-2xl font-medium" id="back-meaning">mẹ, má</div>
-
-            <div class="mt-5 h-px bg-line"></div>
-
-            <div class="mt-14 flex items-center gap-3">
-              <span class="text-[14px] tracking-[0.18em] text-dim uppercase">Ví dụ</span>
-              <button class="speaker text-neutral-400 hover:text-white transition" data-target="example-zh" title="Phát âm câu">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-              </button>
-              <button class="rec-btn text-neutral-400 hover:text-white transition" data-slot="example" title="Thu âm câu">
-                <svg class="rec-icon-mic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="22"/></svg>
-                <svg class="rec-icon-stop hidden" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
-              </button>
-              <button class="play-rec-btn text-neutral-400 hover:text-white transition hidden" data-slot="example" title="Nghe lại bản thu câu">
-                <svg class="play-icon-play" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="6 4 20 12 6 20 6 4"/></svg>
-                <svg class="play-icon-pause hidden" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
-              </button>
-            </div>
-
-            <div class="mt-2 font-cjk text-xl" id="example-zh">我<span class="text-brand-red">妈妈</span>很漂亮。</div>
-            <div class="mt-1 italic text-neutral-400 text-sm" id="example-pinyin">Wǒ māma hěn piàoliang.</div>
-            <div class="mt-1 text-neutral-300 text-sm" id="example-vi">Mẹ tôi rất xinh đẹp.</div>
-          </div>
-
         </div>
-      </div>
+      </a>
 
-      <!-- Empty-state overlay -->
-      <div id="empty-state" class="hidden absolute inset-0 rounded-2xl bg-card2 border border-line shadow-card flex flex-col items-center justify-center text-center px-6">
-        <div class="font-cjk text-5xl text-neutral-700">空</div>
-        <div class="mt-3 text-neutral-300 font-medium">Chưa có dữ liệu cho ngày này</div>
-        <div class="mt-1 text-sm text-dim">Bổ sung từ vựng vào <code class="text-neutral-300">data.js</code> để bắt đầu học.</div>
-      </div>
-    </div>
+      <!-- Bộ thủ -->
+      <a href="./bo-thu/" class="card-link group relative overflow-hidden rounded-2xl bg-card border border-line shadow-card p-6 transition hover:border-brand-red/50 hover:shadow-glow">
+        <div class="hanzi-bg pointer-events-none absolute -right-4 -bottom-8 hanzi text-[160px] leading-none font-black text-white/5 transition duration-300">部</div>
+        <div class="relative">
+          <div class="flex items-center justify-between mb-6">
+            <div class="w-12 h-12 rounded-xl bg-brand-red/15 border border-brand-red/30 flex items-center justify-center">
+              <span class="hanzi text-2xl text-brand-redSoft font-bold">部</span>
+            </div>
+            <span class="text-xs text-dim uppercase tracking-wider">bù</span>
+          </div>
+          <h2 class="text-xl font-semibold mb-1">Bộ thủ</h2>
+          <p class="text-sm text-muted mb-6">214 bộ thủ Hán tự — nền tảng để nhớ và đoán nghĩa chữ Hán.</p>
+          <div class="flex items-center gap-2 text-sm text-brand-redSoft font-medium">
+            <span>Bắt đầu</span>
+            <span class="arrow transition-transform">→</span>
+          </div>
+        </div>
+      </a>
 
-    <!-- Rating bar -->
-    <div class="mt-8 sm:mt-10 flex items-center justify-center gap-2 sm:gap-3">
-      <button class="rate-btn group flex items-center gap-3 px-5 sm:px-8 py-3 rounded-xl bg-card border border-line hover:border-bad/50 hover:bg-bad/5 transition" data-level="hard">
-        <span>Khó</span><span class="kbd group-hover:border-bad/60">1</span>
-      </button>
-      <button class="rate-btn group flex items-center gap-3 px-5 sm:px-8 py-3 rounded-xl bg-card border border-line hover:border-warn/50 hover:bg-warn/5 transition" data-level="medium">
-        <span>Vừa</span><span class="kbd group-hover:border-warn/60">2</span>
-      </button>
-      <button class="rate-btn group flex items-center gap-3 px-5 sm:px-8 py-3 rounded-xl bg-card border border-line hover:border-ok/50 hover:bg-ok/5 transition" data-level="easy">
-        <span>Dễ</span><span class="kbd group-hover:border-ok/60">3</span>
-      </button>
-    </div>
+      <!-- Hội thoại -->
+      <a href="./hoi-thoai/" class="card-link group relative overflow-hidden rounded-2xl bg-card border border-line shadow-card p-6 transition hover:border-brand-red/50 hover:shadow-glow">
+        <div class="hanzi-bg pointer-events-none absolute -right-4 -bottom-8 hanzi text-[160px] leading-none font-black text-white/5 transition duration-300">话</div>
+        <div class="relative">
+          <div class="flex items-center justify-between mb-6">
+            <div class="w-12 h-12 rounded-xl bg-brand-red/15 border border-brand-red/30 flex items-center justify-center">
+              <span class="hanzi text-2xl text-brand-redSoft font-bold">话</span>
+            </div>
+            <span class="text-xs text-dim uppercase tracking-wider">huà</span>
+          </div>
+          <h2 class="text-xl font-semibold mb-1">Hội thoại</h2>
+          <p class="text-sm text-muted mb-6">Mẫu câu giao tiếp thực tế: chào hỏi, mua sắm, du lịch, công việc.</p>
+          <div class="flex items-center gap-2 text-sm text-brand-redSoft font-medium">
+            <span>Bắt đầu</span>
+            <span class="arrow transition-transform">→</span>
+          </div>
+        </div>
+      </a>
 
-    <!-- Keyboard hint -->
-    <div class="mt-5 mb-10 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 sm:gap-6 text-xs text-dim">
-      <span class="flex items-center gap-1.5"><span class="kbd">←</span> Trước</span>
-      <span class="flex items-center gap-1.5"><span class="kbd">→</span> Sau</span>
-      <span class="flex items-center gap-1.5"><span class="kbd">Space</span> Lật</span>
-      <span class="flex items-center gap-1.5"><span class="kbd">1-2-3</span> Đánh giá</span>
-    </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="mt-16 text-center text-xs text-dim">
+      <p>© <span id="year"></span> hoctiengtrung247 · Made with <span class="text-brand-redSoft">♥</span> for Vietnamese learners</p>
+    </footer>
+
   </main>
 
-  <!-- ===== Day picker modal ===== -->
-  <div id="picker" class="modal-hidden fixed inset-0 z-50">
-    <div class="modal-overlay absolute inset-0 bg-black/70 backdrop-blur-sm" id="picker-overlay"></div>
-    <div class="absolute inset-0 flex items-start justify-center p-6 overflow-y-auto">
-      <div class="modal-panel relative mt-10 w-full max-w-3xl bg-card2 border border-line rounded-2xl shadow-card p-5 sm:p-8">
-        <button id="picker-close" class="absolute top-5 right-5 w-9 h-9 rounded-lg border border-line hover:bg-white/5 transition flex items-center justify-center text-neutral-300">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-
-        <div class="leading-tight">
-          <div class="text-lg font-semibold">Chọn ngày học</div>
-          <div class="text-sm text-dim">80 ngày · Học mỗi ngày 10 từ</div>
-        </div>
-
-        <div id="picker-grid" class="mt-6 space-y-7"></div>
-      </div>
-    </div>
-  </div>
-
-  <script src="data.js"></script>
-  <script src="app.js"></script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
