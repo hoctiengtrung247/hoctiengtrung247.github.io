@@ -97,7 +97,7 @@
   }
 
   // ---------- IndexedDB (recordings) ----------
-  const DB_NAME = "htt247-recordings";
+  const DB_NAME = "htt247-recordings-bo-thu";
   const DB_VERSION = 1;
   const DB_STORE = "recordings";
   let _dbPromise = null;
