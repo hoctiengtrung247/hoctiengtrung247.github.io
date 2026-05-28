@@ -96,6 +96,225 @@
     } catch {}
   }
 
+  // ---------- IndexedDB (recordings) ----------
+  const DB_NAME = "htt247-recordings";
+  const DB_VERSION = 1;
+  const DB_STORE = "recordings";
+  let _dbPromise = null;
+
+  function openRecDB() {
+    if (_dbPromise) return _dbPromise;
+    _dbPromise = new Promise((resolve, reject) => {
+      if (!("indexedDB" in window)) { reject(new Error("IndexedDB not supported")); return; }
+      const req = indexedDB.open(DB_NAME, DB_VERSION);
+      req.onupgradeneeded = () => {
+        const db = req.result;
+        if (!db.objectStoreNames.contains(DB_STORE)) {
+          db.createObjectStore(DB_STORE, { keyPath: "id" });
+        }
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+    return _dbPromise;
+  }
+
+  async function putRecording(id, blob, mimeType) {
+    const db = await openRecDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(DB_STORE, "readwrite");
+      tx.objectStore(DB_STORE).put({ id, blob, mimeType, createdAt: Date.now() });
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  }
+
+  async function getRecording(id) {
+    const db = await openRecDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(DB_STORE, "readonly");
+      const req = tx.objectStore(DB_STORE).get(id);
+      req.onsuccess = () => resolve(req.result || null);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  function recordingId(day, idx, slot) {
+    return `${day}-${idx}-${slot}`;
+  }
+
+  // ---------- MediaRecorder ----------
+  let activeRecorder = null; // { recorder, slot, chunks, stream, day, idx, savedPromise }
+  let sharedStream = null;   // tái sử dụng giữa các lần thu, tránh hỏi quyền lặp lại
+
+  async function getMicStream() {
+    if (sharedStream && sharedStream.getTracks().some((t) => t.readyState === "live")) {
+      return sharedStream;
+    }
+    sharedStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    return sharedStream;
+  }
+
+  function releaseMicStream() {
+    if (!sharedStream) return;
+    sharedStream.getTracks().forEach((t) => t.stop());
+    sharedStream = null;
+  }
+
+  function setRecButtonState(slot, recording) {
+    document.querySelectorAll(`.rec-btn[data-slot="${slot}"]`).forEach((btn) => {
+      btn.classList.toggle("is-recording", recording);
+      const mic = btn.querySelector(".rec-icon-mic");
+      const stop = btn.querySelector(".rec-icon-stop");
+      if (mic) mic.classList.toggle("hidden", recording);
+      if (stop) stop.classList.toggle("hidden", !recording);
+      btn.title = recording ? "Dừng thu" : (slot === "example" ? "Thu âm câu" : "Thu âm giọng bạn");
+    });
+  }
+
+  function setPlayButtonVisible(slot, visible) {
+    document.querySelectorAll(`.play-rec-btn[data-slot="${slot}"]`).forEach((btn) => {
+      btn.classList.toggle("hidden", !visible);
+    });
+  }
+
+  async function refreshRecButtons() {
+    const day = state.currentDay;
+    const idx = state.currentCardIndex;
+    for (const slot of ["word", "example"]) {
+      try {
+        const rec = await getRecording(recordingId(day, idx, slot));
+        setPlayButtonVisible(slot, !!rec);
+      } catch {
+        setPlayButtonVisible(slot, false);
+      }
+    }
+  }
+
+  async function startRecording(slot) {
+    if (!navigator.mediaDevices || !window.MediaRecorder) {
+      alert("Trình duyệt không hỗ trợ thu âm.");
+      return;
+    }
+    if (activeRecorder) {
+      await stopRecording();
+    }
+    let stream;
+    try {
+      stream = await getMicStream();
+    } catch (err) {
+      alert("Cần cấp quyền truy cập micro để thu âm.");
+      return;
+    }
+    const mimeType = pickRecorderMime();
+    const recorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
+    const chunks = [];
+    recorder.ondataavailable = (e) => { if (e.data && e.data.size) chunks.push(e.data); };
+    const day = state.currentDay;
+    const idx = state.currentCardIndex;
+    const savedPromise = new Promise((resolve) => {
+      recorder.onstop = async () => {
+        try {
+          const type = recorder.mimeType || "audio/webm";
+          const blob = new Blob(chunks, { type });
+          await putRecording(recordingId(day, idx, slot), blob, type);
+        } catch (err) {
+          console.error("Lưu bản thu thất bại:", err);
+        } finally {
+          // KHÔNG stop tracks — giữ sharedStream để các lần thu tiếp theo không phải xin quyền lại
+          if (day === state.currentDay && idx === state.currentCardIndex) {
+            setPlayButtonVisible(slot, true);
+          }
+          resolve();
+        }
+      };
+    });
+    activeRecorder = { recorder, slot, chunks, stream, day, idx, savedPromise };
+    setRecButtonState(slot, true);
+    recorder.start();
+  }
+
+  function pickRecorderMime() {
+    if (!window.MediaRecorder || !MediaRecorder.isTypeSupported) return "";
+    const candidates = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/ogg;codecs=opus"];
+    for (const c of candidates) {
+      if (MediaRecorder.isTypeSupported(c)) return c;
+    }
+    return "";
+  }
+
+  async function stopRecording() {
+    if (!activeRecorder) return;
+    const { recorder, slot, savedPromise } = activeRecorder;
+    activeRecorder = null;
+    setRecButtonState(slot, false);
+    if (recorder.state !== "inactive") {
+      try { recorder.stop(); } catch {}
+    }
+    await savedPromise;
+  }
+
+  // ---------- Playback (bản thu của user) ----------
+  let activePlayback = null; // { audio, slot, url }
+
+  function setPlayBtnState(slot, isPlaying) {
+    document.querySelectorAll(`.play-rec-btn[data-slot="${slot}"]`).forEach((btn) => {
+      btn.classList.toggle("is-playing", isPlaying);
+      const p = btn.querySelector(".play-icon-play");
+      const ps = btn.querySelector(".play-icon-pause");
+      if (p) p.classList.toggle("hidden", isPlaying);
+      if (ps) ps.classList.toggle("hidden", !isPlaying);
+      btn.title = isPlaying ? "Tạm dừng" : "Nghe lại bản thu";
+    });
+  }
+
+  function stopPlayback() {
+    if (!activePlayback) return;
+    const { audio, slot, url } = activePlayback;
+    activePlayback = null;
+    try { audio.pause(); } catch {}
+    try { URL.revokeObjectURL(url); } catch {}
+    setPlayBtnState(slot, false);
+  }
+
+  async function playRecording(slot) {
+    // Cùng slot: pause/resume thay vì stop+restart
+    if (activePlayback && activePlayback.slot === slot) {
+      const a = activePlayback.audio;
+      if (a.paused) {
+        try {
+          await a.play();
+          setPlayBtnState(slot, true);
+        } catch {
+          stopPlayback();
+        }
+      } else {
+        a.pause();
+        setPlayBtnState(slot, false);
+      }
+      return;
+    }
+    // Khác slot: dừng cái cũ
+    if (activePlayback) stopPlayback();
+
+    const id = recordingId(state.currentDay, state.currentCardIndex, slot);
+    let rec;
+    try { rec = await getRecording(id); } catch { rec = null; }
+    if (!rec || !rec.blob) return;
+    const url = URL.createObjectURL(rec.blob);
+    const audio = new Audio(url);
+    activePlayback = { audio, slot, url };
+    setPlayBtnState(slot, true);
+    const cleanup = () => { if (activePlayback && activePlayback.audio === audio) stopPlayback(); };
+    audio.onended = cleanup;
+    audio.onerror = cleanup;
+    try {
+      await audio.play();
+    } catch {
+      cleanup();
+    }
+  }
+
   // ---------- Renderers ----------
   function renderHeader() {
     let easy = 0, medium = 0, hard = 0;
@@ -159,6 +378,11 @@
     inner.classList.remove("fade-in");
     void inner.offsetWidth;
     inner.classList.add("fade-in");
+
+    // refresh recording buttons (async, không cần chờ)
+    setPlayButtonVisible("word", false);
+    setPlayButtonVisible("example", false);
+    refreshRecButtons();
   }
 
   function renderAll() {
@@ -168,22 +392,29 @@
   }
 
   // ---------- Actions ----------
+  async function leaveCurrentCard() {
+    stopPlayback();
+    if (activeRecorder) await stopRecording();
+  }
+
   function flipCard() {
     if (!currentCard()) return;
     els.flashcard.classList.toggle("is-flipped");
   }
-  function goPrev() {
+  async function goPrev() {
     if (state.currentCardIndex > 0) {
+      await leaveCurrentCard();
       state.currentCardIndex--;
       saveState();
       renderDayInfo();
       renderCard();
     }
   }
-  function goNext() {
+  async function goNext() {
     const d = currentDayData();
     if (!d.cards.length) return;
     if (state.currentCardIndex < d.cards.length - 1) {
+      await leaveCurrentCard();
       state.currentCardIndex++;
       saveState();
       renderDayInfo();
@@ -199,8 +430,9 @@
     // small delay so flip animation does not collide
     setTimeout(goNext, 180);
   }
-  function setDay(n) {
+  async function setDay(n) {
     if (n < 1 || n > data.days.length) return;
+    await leaveCurrentCard();
     state.currentDay = n;
     state.currentCardIndex = 0;
     saveState();
@@ -255,7 +487,7 @@
     // card flip on click (front + back faces)
     els.flashcard.querySelectorAll(".card-face").forEach((face) => {
       face.addEventListener("click", (e) => {
-        if (e.target.closest(".speaker")) return; // don't flip when clicking speaker
+        if (e.target.closest(".speaker, .rec-btn, .play-rec-btn")) return; // don't flip when clicking icon buttons
         flipCard();
       });
     });
@@ -267,6 +499,27 @@
         const targetId = btn.dataset.target;
         const el = document.getElementById(targetId);
         if (el) speak(el.textContent.trim());
+      });
+    });
+
+    // record buttons (toggle thu / dừng)
+    document.querySelectorAll(".rec-btn").forEach((btn) => {
+      btn.addEventListener("click", async (e) => {
+        e.stopPropagation();
+        const slot = btn.dataset.slot;
+        if (activeRecorder && activeRecorder.slot === slot) {
+          await stopRecording();
+        } else {
+          await startRecording(slot);
+        }
+      });
+    });
+
+    // play recording buttons
+    document.querySelectorAll(".play-rec-btn").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        playRecording(btn.dataset.slot);
       });
     });
 
@@ -318,6 +571,14 @@
           // no-op when no modal
           break;
       }
+    });
+
+    // cleanup mic stream khi rời trang
+    window.addEventListener("pagehide", () => {
+      if (activeRecorder) {
+        try { activeRecorder.recorder.stop(); } catch {}
+      }
+      releaseMicStream();
     });
   }
 

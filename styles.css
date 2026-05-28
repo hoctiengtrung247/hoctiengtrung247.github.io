@@ -94,3 +94,16 @@ html, body {
 /* Subtle pulse for current card area */
 @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 .fade-in { animation: fadeIn .25s ease; }
+
+/* Recording state */
+.rec-btn.is-recording {
+  color: #ef4444;
+  animation: pulse-rec 1.2s ease-in-out infinite;
+}
+@keyframes pulse-rec {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.45; }
+}
+.play-rec-btn.is-playing {
+  color: #22c55e;
+}

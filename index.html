@@ -141,6 +141,14 @@
                 <button class="speaker text-neutral-400 hover:text-white transition" data-target="front-word" title="Phát âm">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
                 </button>
+                <button class="rec-btn text-neutral-400 hover:text-white transition" data-slot="word" title="Thu âm giọng bạn">
+                  <svg class="rec-icon-mic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="22"/></svg>
+                  <svg class="rec-icon-stop hidden" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+                </button>
+                <button class="play-rec-btn text-neutral-400 hover:text-white transition hidden" data-slot="word" title="Nghe lại bản thu">
+                  <svg class="play-icon-play" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+                  <svg class="play-icon-pause hidden" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+                </button>
               </div>
             </div>
 
@@ -159,7 +167,15 @@
               <div class="font-cjk font-bold text-4xl text-brand-red leading-none" id="back-word">妈妈</div>
               <div class="text-xl text-neutral-300" id="back-pinyin">māma</div>
               <button class="speaker text-neutral-400 hover:text-white transition" data-target="back-word" title="Phát âm">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+              </button>
+              <button class="rec-btn text-neutral-400 hover:text-white transition" data-slot="word" title="Thu âm giọng bạn">
+                <svg class="rec-icon-mic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="22"/></svg>
+                <svg class="rec-icon-stop hidden" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+              </button>
+              <button class="play-rec-btn text-neutral-400 hover:text-white transition hidden" data-slot="word" title="Nghe lại bản thu">
+                <svg class="play-icon-play" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+                <svg class="play-icon-pause hidden" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
               </button>
             </div>
 
@@ -168,9 +184,17 @@
             <div class="mt-5 h-px bg-line"></div>
 
             <div class="mt-14 flex items-center gap-3">
-              <span class="text-[10px] tracking-[0.18em] text-dim uppercase">Ví dụ</span>
+              <span class="text-[14px] tracking-[0.18em] text-dim uppercase">Ví dụ</span>
               <button class="speaker text-neutral-400 hover:text-white transition" data-target="example-zh" title="Phát âm câu">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+              </button>
+              <button class="rec-btn text-neutral-400 hover:text-white transition" data-slot="example" title="Thu âm câu">
+                <svg class="rec-icon-mic" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><line x1="12" y1="18" x2="12" y2="22"/></svg>
+                <svg class="rec-icon-stop hidden" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+              </button>
+              <button class="play-rec-btn text-neutral-400 hover:text-white transition hidden" data-slot="example" title="Nghe lại bản thu câu">
+                <svg class="play-icon-play" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+                <svg class="play-icon-pause hidden" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
               </button>
             </div>
 
