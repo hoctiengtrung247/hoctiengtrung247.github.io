@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Học Tiếng Trung 247 — Hội thoại Msutong B1</title>
+  <title>Học Tiếng Trung 247 — Hội thoại Msutong B1-B4</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -50,7 +50,7 @@
         </div>
         <div class="leading-tight">
           <div class="font-semibold">Học Tiếng Trung 247</div>
-          <div class="text-xs text-dim">Hội thoại · Msutong Sơ cấp B1</div>
+          <div class="text-xs text-dim">Hội thoại · Msutong Sơ cấp B1–B4</div>
         </div>
       </a>
 
@@ -58,7 +58,7 @@
         <div class="flex items-center gap-2">
           <span class="text-dim">Đã học</span>
           <span class="font-semibold tabular-nums" id="stat-completed">0</span>
-          <span class="text-dim">/ <span id="stat-total">20</span></span>
+          <span class="text-dim">/ <span id="stat-total">80</span></span>
         </div>
       </div>
     </div>
@@ -73,7 +73,7 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
           </button>
           <div class="px-5 py-2.5 text-center leading-tight border-l border-r border-line whitespace-nowrap">
-            <div class="text-[10px] tracking-[0.18em] text-dim uppercase" id="lesson-label">Bài 1 · Bài khóa (1)</div>
+            <div class="text-[10px] tracking-[0.18em] text-dim uppercase" id="lesson-label">B1 · Bài 1 · Bài khóa (1)</div>
             <div class="text-sm font-medium">
               <span class="font-cjk text-brand-red" id="lesson-title-zh">你好！</span>
               <span class="text-neutral-300"> · </span>
@@ -87,7 +87,7 @@
 
         <button id="open-picker" class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-card border border-line hover:bg-white/5 transition text-sm">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-          Tất cả 20 bài
+          Tất cả 80 bài
         </button>
       </div>
 
@@ -169,8 +169,11 @@
 
         <div class="leading-tight">
           <div class="text-lg font-semibold">Chọn bài hội thoại</div>
-          <div class="text-sm text-dim">Msutong Sơ cấp B1 · 10 Bài · 20 đoạn</div>
+          <div class="text-sm text-dim">Msutong Sơ cấp B1–B4 · 40 Bài · 80 đoạn</div>
         </div>
+
+        <!-- Tab giáo trình -->
+        <div id="picker-tabs" class="mt-4 flex gap-2 flex-wrap"></div>
 
         <div id="picker-grid" class="mt-6 space-y-5"></div>
       </div>
@@ -178,6 +181,9 @@
   </div>
 
   <script src="data.js"></script>
+  <script src="data-b2.js"></script>
+  <script src="data-b3.js"></script>
+  <script src="data-b4.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

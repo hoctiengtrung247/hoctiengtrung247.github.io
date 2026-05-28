@@ -2,9 +2,12 @@
 // Trích từ hoi-thoai-b1-bai-1-10.md — chia thành 20 bài học (mỗi "Bài khóa" = 1 lesson).
 // Quy ước: vai xuất hiện đầu tiên trong exchanges → hiển thị bên phải (chat bubble).
 
-window.dialogueData = {
-  textbookId: "msutong-b1",
-  textbookName: "Msutong Sơ cấp B1",
+(function () {
+  window.dialogueBooks = window.dialogueBooks || [];
+  window.dialogueBooks.push({
+  id: "msutong-b1",
+  shortName: "B1",
+  name: "Msutong Sơ cấp B1",
   lessons: [
     // ===== Bài 1 =====
     {
@@ -385,4 +388,5 @@ window.dialogueData = {
       ],
     },
   ],
-};
+  });
+})();

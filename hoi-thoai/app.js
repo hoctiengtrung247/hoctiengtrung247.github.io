@@ -1,5 +1,6 @@
 // Hội thoại — app logic
-// Globals: window.dialogueData (data.js) = { textbookId, textbookName, lessons: [...] }
+// Globals: window.dialogueBooks (data.js, data-b2.js, data-b3.js, data-b4.js)
+//   = [{ id, shortName, name, lessons: [...] }, ...]
 
 (function () {
   const STORAGE_KEY = "htt247:hoi-thoai:state";
@@ -26,7 +27,19 @@
   }
 
   const state = loadState();
-  const lessons = window.dialogueData.lessons;
+
+  // Gộp tất cả lessons từ các giáo trình thành mảng phẳng,
+  // mỗi lesson có thêm bookId / bookShortName / bookName / bookIdx để hiển thị.
+  const books = window.dialogueBooks || [];
+  const lessons = [];
+  books.forEach((book, bookIdx) => {
+    book.lessons.forEach((l) => {
+      lessons.push({ ...l, bookId: book.id, bookShortName: book.shortName, bookName: book.name, bookIdx });
+    });
+  });
+
+  // pickerActiveBookIdx — chỉ phục vụ UI picker (không persist)
+  let pickerActiveBookIdx = 0;
 
   // ---------- DOM ----------
   const $ = (id) => document.getElementById(id);
@@ -58,6 +71,7 @@
     pickerOverlay: $("picker-overlay"),
     pickerClose: $("picker-close"),
     pickerGrid: $("picker-grid"),
+    pickerTabs: $("picker-tabs"),
   };
 
   // ---------- Helpers ----------
@@ -375,7 +389,7 @@
   function renderLessonInfo() {
     const lesson = currentLesson();
     if (!lesson) return;
-    els.lessonLabel.textContent = `Bài ${lesson.baiNumber} · ${lesson.partLabel}`;
+    els.lessonLabel.textContent = `${lesson.bookShortName} · Bài ${lesson.baiNumber} · ${lesson.partLabel}`;
     els.lessonTitleZh.textContent = lesson.baiTitleZh;
     els.lessonTitleVi.textContent = lesson.baiTitleVi;
     els.exchangeCount.textContent = `${lesson.exchanges.length} câu`;
@@ -477,10 +491,32 @@
   }
 
   // ---------- Modal ----------
+  function buildPickerTabs() {
+    const tabsHtml = books.map((book, idx) => {
+      const isActive = idx === pickerActiveBookIdx;
+      return `<button class="lesson-cell ${isActive ? "is-current" : ""}" data-book-idx="${idx}" style="width:auto;padding:6px 14px;">
+        <span class="font-semibold">${escapeHtml(book.shortName)}</span>
+      </button>`;
+    }).join("");
+    els.pickerTabs.innerHTML = tabsHtml;
+    els.pickerTabs.querySelectorAll("[data-book-idx]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        pickerActiveBookIdx = Number(btn.dataset.bookIdx);
+        buildPickerTabs();
+        buildPickerGrid();
+      });
+    });
+  }
+
   function buildPickerGrid() {
-    // Nhóm theo baiNumber
+    // Chỉ hiển thị lessons của book đang chọn ở tab
+    const book = books[pickerActiveBookIdx];
+    if (!book) { els.pickerGrid.innerHTML = ""; return; }
+
+    // Nhóm theo baiNumber trong book này
     const groups = {};
     lessons.forEach((l, idx) => {
+      if (l.bookIdx !== pickerActiveBookIdx) return;
       if (!groups[l.baiNumber]) {
         groups[l.baiNumber] = { baiNumber: l.baiNumber, titleZh: l.baiTitleZh, titleVi: l.baiTitleVi, items: [] };
       }
@@ -525,6 +561,10 @@
     });
   }
   function openPicker() {
+    // Mặc định mở tab khớp với bài đang học
+    const cur = currentLesson();
+    pickerActiveBookIdx = cur ? cur.bookIdx : 0;
+    buildPickerTabs();
     buildPickerGrid();
     els.picker.classList.remove("modal-hidden");
   }
