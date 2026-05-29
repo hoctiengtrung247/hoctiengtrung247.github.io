@@ -1,0 +1,109 @@
+/* Base */
+html, body {
+  background: #0a0a0a;
+  color: #f5f5f5;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-feature-settings: "cv11", "ss01";
+}
+
+.font-cjk {
+  font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+}
+
+/* Flashcard flip — 3D transform */
+.card-flip {
+  perspective: 1600px;
+}
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.55s cubic-bezier(.2,.8,.2,1);
+}
+.card-flip.is-flipped .card-inner {
+  transform: rotateY(180deg);
+}
+.card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.card-back {
+  transform: rotateY(180deg);
+}
+
+/* Modal slide-in */
+.modal-overlay { transition: opacity .2s ease; }
+.modal-panel  { transition: transform .25s ease, opacity .25s ease; }
+.modal-hidden { pointer-events: none; }
+.modal-hidden .modal-overlay { opacity: 0; }
+.modal-hidden .modal-panel   { transform: translateY(12px) scale(.98); opacity: 0; }
+
+/* Day cell */
+.day-cell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.02);
+  color: #d4d4d4;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.day-cell:hover {
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.18);
+  color: #fff;
+}
+.day-cell.is-current {
+  border-color: #dc2626;
+  color: #fff;
+  box-shadow: 0 0 0 1px rgba(220,38,38,.4) inset;
+}
+.day-cell.is-empty {
+  color: #6b7280;
+}
+
+/* Key chips */
+.kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  font-size: 11px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 6px;
+  color: #d4d4d4;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,.08); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.16); }
+
+/* Subtle pulse for current card area */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.fade-in { animation: fadeIn .25s ease; }
+
+/* Recording state */
+.rec-btn.is-recording {
+  color: #ef4444;
+  animation: pulse-rec 1.2s ease-in-out infinite;
+}
+@keyframes pulse-rec {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.45; }
+}
+.play-rec-btn.is-playing {
+  color: #22c55e;
+}

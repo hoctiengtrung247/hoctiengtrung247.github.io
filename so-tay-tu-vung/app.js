@@ -3,7 +3,7 @@
 //   - window.data (data.js): { days: [{ id, hsk, theme, themeZh, cards: [...] }] }
 
 (function () {
-  const STORAGE_KEY = "htt247:tu-vung:state";
+  const STORAGE_KEY = "htt247:state";
 
   const defaultState = {
     currentDay: 1,
@@ -97,7 +97,7 @@
   }
 
   // ---------- IndexedDB (recordings) ----------
-  const DB_NAME = "htt247-rec-tu-vung";
+  const DB_NAME = "htt247-recordings-tu-vung";
   const DB_VERSION = 1;
   const DB_STORE = "recordings";
   let _dbPromise = null;
@@ -321,7 +321,7 @@
 
   function renderDayInfo() {
     const d = currentDayData();
-    els.dayLabel.textContent = `${d.level ? d.level + " · " : ""}Bài ${d.id} /`;
+    els.dayLabel.textContent = `Ngày ${d.id} /`;
     els.dayThemeZh.textContent = d.themeZh || "—";
     els.dayThemeVi.textContent = d.theme || "Chưa cập nhật";
     els.topicName.textContent = d.theme || "—";
@@ -433,27 +433,24 @@
 
   // ---------- Modal ----------
   function buildPickerGrid() {
-    // Group days by level ("B1", "B2", ...), preserving order; cell shows lesson id, data-day = flat index.
-    const groups = [];
-    data.days.forEach((d, idx) => {
-      const key = d.level || "—";
-      let g = groups.find((x) => x.level === key);
-      if (!g) { g = { level: key, items: [] }; groups.push(g); }
-      g.items.push({ d, flat: idx + 1 });
-    });
+    const groups = [
+      { hsk: 1, label: "HSK 1", range: [1, 30] },
+      { hsk: 2, label: "HSK 2", range: [31, 60] },
+      { hsk: 3, label: "HSK 3", range: [61, data.days.length] },
+    ];
     els.pickerGrid.innerHTML = groups.map((g) => {
-      const cells = g.items.map(({ d, flat }) => {
-        const isCurrent = flat === state.currentDay;
+      const cells = [];
+      for (let i = g.range[0]; i <= g.range[1]; i++) {
+        const d = data.days[i - 1];
+        const isCurrent = i === state.currentDay;
         const isEmpty = !d.cards.length;
-        return `<button class="day-cell ${isCurrent ? "is-current" : ""} ${isEmpty ? "is-empty" : ""}" data-day="${flat}">${d.id}</button>`;
-      });
-      const first = g.items[0].d.id;
-      const last = g.items[g.items.length - 1].d.id;
+        cells.push(`<button class="day-cell ${isCurrent ? "is-current" : ""} ${isEmpty ? "is-empty" : ""}" data-day="${i}">${i}</button>`);
+      }
       return `
         <div>
           <div class="flex items-baseline justify-between mb-3">
-            <div class="text-brand-red text-xs tracking-[0.18em] uppercase font-semibold">Msutong Sơ cấp ${g.level}</div>
-            <div class="text-xs text-dim">Bài ${first}–${last}</div>
+            <div class="text-brand-red text-xs tracking-[0.18em] uppercase font-semibold">${g.label}</div>
+            <div class="text-xs text-dim">Ngày ${g.range[0]}–${g.range[1]}</div>
           </div>
           <div class="grid grid-cols-10 gap-2">${cells.join("")}</div>
         </div>`;
