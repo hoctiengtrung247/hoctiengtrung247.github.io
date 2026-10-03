@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5f5f0">
+  <title>Thanh điệu - Luyện Pinyin mỗi ngày</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      color-scheme: light;
+      --ink: #172724;
+      --muted: #697873;
+      --line: #dfe5de;
+      --paper: #f5f5f0;
+      --white: #fffefa;
+      --teal: #087e73;
+      --teal-dark: #075d56;
+      --mint: #d9f2e8;
+      --coral: #f1785b;
+      --yellow: #f4d56d;
+      --soft-coral: #fff0e9;
+      --shadow: 0 16px 40px rgba(28, 52, 44, .08);
+      font-family: 'DM Sans', sans-serif;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--paper); color: var(--ink); }
+    button, input { font: inherit; }
+    button { color: inherit; }
+    .shell { width: min(1160px, calc(100% - 48px)); margin: 0 auto; }
+
+    .topbar { height: 76px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(23,39,36,.1); }
+    .brand { display: inline-flex; align-items: center; gap: 11px; color: var(--ink); text-decoration: none; font: 800 17px Manrope, sans-serif; }
+    .brand-mark { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px; background: var(--teal); color: white; font: 700 19px Georgia, serif; }
+    .topnav { display: flex; align-items: center; gap: 30px; }
+    .topnav a { color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 600; }
+    .topnav a:hover, .topnav a.active { color: var(--teal-dark); }
+    .streak { display: inline-flex; align-items: center; gap: 8px; padding: 9px 13px; border: 1px solid #e9ddba; border-radius: 999px; background: #fff8df; color: #755d19; font-size: 13px; font-weight: 700; }
+    .streak svg { width: 17px; height: 17px; }
+    .header-pills { display: flex; align-items: center; gap: 8px; }
+
+    .intro { padding: 42px 0 28px; display: flex; align-items: end; justify-content: space-between; gap: 24px; }
+    .eyebrow { margin: 0 0 10px; color: var(--teal); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1, h2, h3 { font-family: Manrope, sans-serif; }
+    h1 { max-width: 650px; margin-bottom: 10px; font-size: clamp(30px, 4vw, 43px); line-height: 1.12; letter-spacing: -.035em; }
+    .intro-copy { max-width: 570px; margin: 0; color: var(--muted); font-size: 15px; line-height: 1.65; }
+    .date-label { flex: 0 0 auto; padding: 12px 15px; border: 1px solid var(--line); border-radius: 12px; background: rgba(255,254,250,.72); color: var(--muted); font-size: 12px; }
+    .date-label strong { display: block; margin-top: 3px; color: var(--ink); font-size: 14px; }
+
+    .roadmap { padding: 4px 0 28px; }
+    .roadmap-head { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin-bottom: 13px; }
+    .roadmap-head h2 { margin: 0 0 5px; font-size: 20px; }
+    .roadmap-head p { margin: 0; color: var(--muted); font-size: 12px; }
+    .path-score { display: flex; align-items: baseline; gap: 9px; flex: 0 0 auto; }
+    .path-score strong { color: var(--teal-dark); font: 800 24px Manrope, sans-serif; }
+    .path-score span { color: var(--muted); font-size: 11px; }
+    .path-progress { height: 5px; margin: 0 0 14px; overflow: hidden; border-radius: 99px; background: #e3e9e2; }
+    .path-progress-fill { width: 0; height: 100%; border-radius: inherit; background: var(--coral); transition: width .3s ease; }
+    .roadmap-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; }
+    .roadmap-day { width: 100%; min-height: 108px; padding: 12px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--white); text-align: left; cursor: pointer; transition: border-color .15s, background .15s, transform .15s; }
+    .roadmap-day:hover:not(:disabled) { transform: translateY(-2px); border-color: var(--teal); }
+    .roadmap-day[aria-current="step"] { border-color: var(--teal); background: var(--mint); }
+    .roadmap-day.is-complete { border-color: #b9d8c4; }
+    .roadmap-day:disabled { color: var(--muted); cursor: not-allowed; opacity: .55; }
+    .roadmap-day span, .roadmap-day strong, .roadmap-day small { display: block; }
+    .roadmap-day .day-number { margin-bottom: 9px; color: var(--teal); font-size: 9px; font-weight: 800; }
+    .roadmap-day strong { min-height: 30px; font: 700 11px/1.35 Manrope, sans-serif; }
+    .roadmap-day small { margin-top: 7px; color: var(--muted); font-size: 9px; line-height: 1.35; }
+
+    .practice-layout { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(260px, .8fr); gap: 20px; align-items: stretch; }
+    .practice-card, .side-card { border: 1px solid var(--line); border-radius: 16px; background: var(--white); box-shadow: var(--shadow); }
+    .practice-card { padding: 26px 30px 28px; }
+    .practice-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .practice-head h2 { margin: 0; font-size: 17px; }
+    .session-count { color: var(--muted); font-size: 12px; font-weight: 600; }
+    .session-mix { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 0; padding: 0; list-style: none; }
+    .mix-chip { display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px; border: 1px solid var(--line); border-radius: 999px; background: var(--white); color: var(--muted); font-size: 10px; font-weight: 700; }
+    .mix-chip b { color: var(--ink); font-weight: 800; }
+    .mix-chip.is-review { border-color: #e9ddba; background: #fff8df; color: #755d19; }
+    .mix-chip.is-review b { color: #755d19; }
+    .mix-chip.is-new { border-color: #b9d8c4; background: var(--mint); color: var(--teal-dark); }
+    .mix-chip.is-new b { color: var(--teal-dark); }
+    .day-bar { height: 3px; margin-top: 7px; overflow: hidden; border-radius: 99px; background: #e3e9e2; }
+    .day-bar-fill { width: 0; height: 100%; border-radius: inherit; background: var(--teal); transition: width .3s ease; }
+    .due-pill { display: inline-flex; align-items: center; gap: 7px; padding: 9px 13px; border: 1px solid #e0cfc8; border-radius: 999px; background: var(--soft-coral); color: #a34831; font-size: 13px; font-weight: 700; }
+    .due-pill[hidden] { display: none; }
+    .goal-split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+    .goal-split div { padding: 9px 11px; border: 1px solid rgba(255,255,255,.2); border-radius: 9px; }
+    .goal-split strong { display: block; font: 800 17px Manrope, sans-serif; }
+    .goal-split span { display: block; margin-top: 2px; color: #c1ded1; font-size: 10px; }
+    .progress-track { height: 5px; margin: 16px 0 25px; overflow: hidden; border-radius: 99px; background: #e8ece6; }
+    .progress-fill { width: 20%; height: 100%; border-radius: inherit; background: var(--teal); transition: width .3s ease; }
+    .question-label { margin-bottom: 8px; color: var(--muted); font-size: 13px; }
+    .prompt { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 132px; margin-bottom: 18px; padding: 20px 24px; overflow: hidden; border-radius: 14px; background: #155e53; color: white; }
+    .prompt::after { position: absolute; right: 24px; bottom: -52px; width: 126px; height: 126px; border: 1px solid rgba(255,255,255,.2); border-radius: 50%; content: ''; box-shadow: 0 0 0 17px rgba(255,255,255,.04); pointer-events: none; }
+    .prompt-copy { position: relative; z-index: 1; min-width: 0; }
+    .prompt-copy span { display: block; margin-bottom: 7px; color: #b9dbcd; font-size: 10px; font-weight: 700; letter-spacing: .1em; }
+    .prompt-copy strong { display: block; font: 600 clamp(34px, 6vw, 48px)/1 Georgia, serif; }
+    .listen-button { position: relative; z-index: 1; width: 52px; height: 52px; display: grid; flex: 0 0 auto; place-items: center; border: 1px solid rgba(255,255,255,.34); border-radius: 50%; background: rgba(255,255,255,.12); color: white; cursor: pointer; transition: transform .15s, background .15s; }
+    .listen-button:hover { transform: scale(1.06); background: rgba(255,255,255,.22); }
+    .listen-button svg { width: 22px; height: 22px; }
+    .answers { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .answer { min-height: 68px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; border: 1px solid var(--line); border-radius: 10px; background: white; cursor: pointer; transition: border-color .15s, background .15s, transform .15s; }
+    .answer-pinyin { font: 700 20px Manrope, sans-serif; }
+    .answer-tone { color: var(--muted); font-size: 11px; font-weight: 500; }
+    .answer:hover:not(:disabled) { transform: translateY(-2px); border-color: var(--teal); }
+    .answer:disabled { cursor: default; }
+    .answer.correct { border-color: #4c9d75; background: #e2f5e9; color: #206440; }
+    .answer.incorrect { border-color: #de7e65; background: var(--soft-coral); color: #a34831; }
+    .feedback { min-height: 25px; margin: 12px 0 0; color: var(--muted); font-size: 13px; }
+    .feedback.good { color: #28734b; }
+    .feedback.bad { color: #a34831; }
+      .pronunciation-check { margin-top: 18px; padding-top: 15px; border-top: 1px solid var(--line); }
+      .pronunciation-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+      .pronunciation-head strong { font: 700 13px Manrope, sans-serif; }
+      .pronunciation-score { flex: 0 0 auto; color: var(--teal-dark); font: 800 16px Manrope, sans-serif; }
+      .pronunciation-note { margin: 5px 0 10px; color: var(--muted); font-size: 11px; line-height: 1.45; }
+      .pronunciation-actions { display: flex; gap: 8px; }
+      .pronunciation-button { min-height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 0 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--white); color: var(--ink); font-size: 11px; font-weight: 700; cursor: pointer; }
+      .pronunciation-button:hover:not(:disabled) { border-color: var(--teal); color: var(--teal-dark); }
+      .pronunciation-button.record { border-color: var(--teal); background: var(--teal); color: white; }
+      .pronunciation-button:disabled { cursor: not-allowed; opacity: .48; }
+      .pronunciation-status { min-height: 18px; margin: 8px 0 0; color: var(--muted); font-size: 10px; line-height: 1.45; }
+    .practice-foot { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-top: 15px; }
+    .microcopy { margin: 0; color: #7b8781; font-size: 11px; }
+    .primary-button { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 42px; padding: 0 16px; border: 0; border-radius: 9px; background: var(--teal); color: white; font-size: 13px; font-weight: 700; cursor: pointer; transition: background .15s, transform .15s; }
+    .primary-button:hover { transform: translateY(-1px); background: var(--teal-dark); }
+    .primary-button svg { width: 16px; height: 16px; }
+
+    .side-card { position: relative; overflow: hidden; padding: 24px; background: var(--teal-dark); color: white; }
+    .side-card::after { position: absolute; right: -32px; bottom: -58px; width: 175px; height: 175px; border: 1px solid rgba(255,255,255,.15); border-radius: 50%; content: ''; box-shadow: 0 0 0 20px rgba(255,255,255,.035), 0 0 0 42px rgba(255,255,255,.025); }
+    .side-card .eyebrow { color: #a5ddc5; }
+    .side-card h2 { max-width: 210px; margin: 0 0 9px; font-size: 22px; line-height: 1.25; }
+    .side-card > p:not(.eyebrow) { max-width: 230px; margin-bottom: 21px; color: #d0e5dc; font-size: 13px; line-height: 1.55; }
+    .goal-row { display: flex; align-items: center; gap: 13px; padding-top: 17px; border-top: 1px solid rgba(255,255,255,.18); }
+    .goal-ring { width: 50px; height: 50px; display: grid; flex: 0 0 auto; place-items: center; border: 3px solid #83c8a7; border-right-color: rgba(255,255,255,.22); border-radius: 50%; font-size: 10px; font-weight: 700; }
+    .goal-row strong { display: block; font-size: 13px; }
+    .goal-row span { display: block; margin-top: 4px; color: #c1ded1; font-size: 11px; }
+    .text-link { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 7px; margin-top: 20px; color: #fff; font-size: 12px; font-weight: 700; text-decoration: none; }
+    .text-link:hover { text-decoration: underline; }
+
+    .library { padding: 54px 0 72px; }
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 20px; margin-bottom: 18px; }
+    .section-head h2 { margin-bottom: 6px; font-size: 24px; letter-spacing: -.025em; }
+    .section-head p { margin: 0; color: var(--muted); font-size: 13px; }
+    .library-tools { display: flex; align-items: center; gap: 12px; }
+    .search-wrap { position: relative; }
+    .search-wrap svg { position: absolute; top: 50%; left: 12px; width: 16px; height: 16px; transform: translateY(-50%); color: #78847e; pointer-events: none; }
+    .search-input { width: 240px; height: 39px; padding: 0 12px 0 36px; border: 1px solid var(--line); border-radius: 9px; outline: none; background: var(--white); font-size: 12px; }
+    .search-input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(8,126,115,.1); }
+    .matrix-count { flex: 0 0 auto; color: var(--muted); font-size: 11px; }
+    .chart-actions { display: flex; align-items: center; gap: 8px; }
+    .view-switch { display: inline-flex; padding: 3px; border: 1px solid var(--line); border-radius: 9px; background: #ecefe9; }
+    .view-switch button { min-height: 31px; padding: 0 10px; border: 0; border-radius: 6px; background: transparent; color: var(--muted); font-size: 11px; font-weight: 700; cursor: pointer; }
+    .view-switch button[aria-pressed="true"] { background: var(--white); color: var(--teal-dark); box-shadow: 0 1px 3px rgba(23,39,36,.12); }
+    .projection-button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 39px; padding: 0 11px; border: 1px solid var(--line); border-radius: 9px; background: var(--white); color: var(--ink); font-size: 11px; font-weight: 700; cursor: pointer; }
+    .projection-button:hover { border-color: var(--teal); color: var(--teal-dark); }
+    .projection-button svg { width: 15px; height: 15px; }
+    .matrix-wrap { overflow: auto; max-height: 620px; border: 1px solid var(--line); border-radius: 10px; background: var(--white); scrollbar-color: #a9beb3 #edf0eb; }
+    .pinyin-matrix { width: 100%; min-width: 1050px; border-collapse: separate; border-spacing: 0; table-layout: fixed; }
+    .pinyin-matrix th, .pinyin-matrix td { width: 43px; height: 34px; padding: 0; border-right: 1px solid #e4e8e2; border-bottom: 1px solid #e4e8e2; text-align: center; }
+    .pinyin-matrix thead th { position: sticky; z-index: 2; top: 0; height: 38px; background: var(--teal); color: white; font-size: 12px; font-weight: 700; }
+    .pinyin-matrix thead th:first-child { left: 0; z-index: 4; width: 62px; }
+    .pinyin-matrix thead th.zero-onset { background: #126e64; }
+    .pinyin-matrix tbody th { position: sticky; z-index: 1; left: 0; width: 62px; background: #d9f2e8; color: var(--teal-dark); font-size: 12px; font-weight: 700; }
+    .pinyin-matrix td { background: var(--white); }
+    .pinyin-matrix td:empty { background: #fbfcf9; }
+    .syllable-button { width: 100%; height: 33px; padding: 0 2px; border: 0; background: transparent; color: #273b36; font-size: 11px; cursor: pointer; transition: background .12s, color .12s; }
+    .syllable-button:hover, .syllable-button:focus-visible, .syllable-button.active { outline: none; background: var(--mint); color: var(--teal-dark); }
+    .syllable-button.match { background: #fff0c3; color: #664f12; }
+    .grouped-view { display: none; }
+    .library[data-view="grouped"] .matrix-wrap { display: none; }
+    .library[data-view="grouped"] .grouped-view { display: block; }
+    .final-group { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 10px; padding: 11px 6px; border-bottom: 1px solid var(--line); }
+    .final-group h3 { margin: 0; padding-top: 7px; color: var(--teal-dark); font-size: 13px; }
+    .syllable-list { display: flex; flex-wrap: wrap; gap: 6px; }
+    .grouped-view .syllable-button { width: auto; min-width: 42px; height: 34px; padding: 0 8px; border: 1px solid var(--line); border-radius: 7px; background: var(--white); font-size: 12px; }
+    .grouped-view .syllable-button:hover, .grouped-view .syllable-button:focus-visible, .grouped-view .syllable-button.active { border-color: var(--teal); }
+    .grouped-view .syllable-button.match { border-color: #e6c76c; background: #fff0c3; }
+    .tone-dialog { width: min(420px, calc(100% - 32px)); padding: 22px; border: 1px solid var(--line); border-radius: 14px; background: var(--white); color: var(--ink); box-shadow: var(--shadow); }
+    .tone-dialog::backdrop { background: rgba(18, 39, 34, .48); backdrop-filter: blur(3px); }
+    .tone-dialog-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .tone-dialog h2 { margin: 0 0 5px; font-size: 20px; }
+    .tone-dialog p { color: var(--muted); font-size: 12px; }
+    .dialog-close { width: 32px; height: 32px; border: 1px solid var(--line); border-radius: 50%; background: var(--white); font-size: 19px; cursor: pointer; }
+    .tone-choices { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+    .tone-choice { min-height: 68px; border: 1px solid var(--line); border-radius: 9px; background: #f8faf6; cursor: pointer; }
+    .tone-choice:hover, .tone-choice:focus-visible { border-color: var(--teal); background: var(--mint); }
+    .tone-choice strong, .tone-choice span { display: block; }
+    .tone-choice strong { font: 700 19px Manrope, sans-serif; }
+    .tone-choice span { margin-top: 4px; color: var(--muted); font-size: 10px; }
+    .audio-status { min-height: 18px; margin: 12px 0 0 !important; font-size: 11px !important; }
+    .empty-state { padding: 24px; color: var(--muted); text-align: center; font-size: 13px; }
+    .library-note { display: flex; align-items: flex-start; gap: 10px; margin: 15px 0 0; color: var(--muted); font-size: 11px; line-height: 1.55; }
+    .note-mark { flex: 0 0 auto; width: 18px; height: 18px; display: grid; place-items: center; border-radius: 50%; background: #e7ece5; color: var(--teal-dark); font-weight: 800; }
+    footer { padding: 17px 0 25px; border-top: 1px solid var(--line); color: #7b8781; font-size: 11px; }
+    :focus-visible { outline: 3px solid rgba(8,126,115,.35); outline-offset: 2px; }
+
+    @media (max-width: 760px) {
+      .shell { width: min(100% - 32px, 560px); }
+      .topbar { height: 66px; }
+      .topnav { display: none; }
+      .topnav { gap: 15px; }
+      .topnav a { font-size: 12px; }
+      .intro { align-items: flex-start; flex-direction: column; padding-top: 32px; }
+      .date-label { display: none; }
+      .roadmap-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .roadmap-day { min-height: 96px; }
+      .practice-layout { grid-template-columns: 1fr; }
+      .answers { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .answer { min-height: 76px; }
+      .pronunciation-actions { display: grid; grid-template-columns: 1fr 1fr; }
+      .pronunciation-button { min-height: 42px; }
+      .side-card { min-height: 235px; }
+      .section-head { align-items: flex-start; flex-direction: column; }
+      .library-tools { width: 100%; }
+      .search-wrap { flex: 1; }
+      .search-input { width: 100%; }
+      .library-tools { align-items: stretch; flex-direction: column; }
+      .chart-actions { justify-content: space-between; }
+      .library { padding-top: 42px; }
+    }
+    @media (max-width: 430px) {
+      .topnav a:first-child { display: none; }
+      .streak { padding: 8px 10px; font-size: 11px; }
+      .practice-card { padding: 20px 16px; }
+      .practice-foot { align-items: flex-start; flex-direction: column; }
+      .practice-foot .primary-button { width: 100%; }
+      .matrix-wrap { max-height: 68vh; }
+      .library-tools { gap: 8px; }
+      .matrix-count { font-size: 10px; }
+      .projection-button { min-height: 37px; padding: 0 9px; }
+      .roadmap-head { align-items: flex-start; }
+      .path-score { flex-direction: column; align-items: flex-end; gap: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+    body.classroom-mode { overflow: hidden; background: var(--white); }
+    body.classroom-mode .topbar, body.classroom-mode .intro, body.classroom-mode .roadmap, body.classroom-mode #practice, body.classroom-mode footer { display: none; }
+    body.classroom-mode main.shell { width: 100%; max-width: none; margin: 0; }
+    body.classroom-mode .library { display: flex; height: 100vh; flex-direction: column; padding: 20px 28px 14px; }
+    body.classroom-mode .section-head { align-items: center; flex: 0 0 auto; }
+    body.classroom-mode .section-head h2 { font-size: 28px; }
+    body.classroom-mode .matrix-wrap { min-height: 0; max-height: none; flex: 1; }
+    body.classroom-mode .pinyin-matrix { min-width: 1050px; }
+    body.classroom-mode .pinyin-matrix th, body.classroom-mode .pinyin-matrix td { height: 25px; }
+    body.classroom-mode .pinyin-matrix thead th { height: 30px; }
+    body.classroom-mode .syllable-button { height: 24px; font-size: 13px; }
+    @media (max-width: 760px) { .projection-button { display: none; } }
+
+    /* --- Thanh điều hướng dưới: chỉ hiện trên mobile, dùng chung một cây DOM --- */
+    .tabbar { display: none; }
+    .tabbar button { min-height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; border: 0; background: transparent; color: var(--muted); font-size: 10px; font-weight: 700; cursor: pointer; }
+    .tabbar button svg { width: 19px; height: 19px; }
+    .tabbar button[aria-current="page"] { color: var(--teal-dark); }
+
+    @media (max-width: 760px) {
+      .tabbar { position: fixed; z-index: 5; right: 0; bottom: 0; left: 0; display: grid; grid-template-columns: repeat(3, 1fr); padding: 9px 12px max(10px, env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: rgba(255,254,250,.96); backdrop-filter: blur(12px); }
+      body { padding-bottom: 86px; }
+      body[data-panel="practice"] > main > :not([data-panel~="practice"]),
+      body[data-panel="roadmap"] > main > :not([data-panel~="roadmap"]),
+      body[data-panel="library"] > main > :not([data-panel~="library"]) { display: none; }
+      body.classroom-mode .tabbar { display: none; }
+      body.classroom-mode { padding-bottom: 0; }
+    }
+  </style>
+</head>
+<body>
+  <header class="shell topbar">
+    <a class="brand" href="#top" aria-label="Thanh điệu, về đầu trang">
+      <span class="brand-mark" aria-hidden="true">声</span>
+      <span>thanh điệu</span>
+    </a>
+    <nav class="topnav" aria-label="Điều hướng chính">
+      <a class="active" href="#practice">Học hôm nay</a>
+      <a href="#library">Bảng âm</a>
+    </nav>
+    <div class="header-pills">
+      <span class="due-pill" id="due-pill" hidden></span>
+      <div class="streak" aria-label="Tiến độ lộ trình">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12.4 2.8c.6 3-1.8 4.2-1.8 6.4 0 1.1.8 1.9 1.8 1.9 1.8 0 2.8-2.2 2.3-4.1 2.5 1.8 4.1 4.3 4.1 7.1A6.8 6.8 0 0 1 12 21a6.8 6.8 0 0 1-6.8-6.9c0-3.3 2.1-6.7 7.2-11.3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 17.9a2.4 2.4 0 0 0 2.4-2.4c0-1.1-.7-2.1-1.8-3.2-.1 1.1-.7 1.5-1.3 2.1-.5.5-.9 1-.9 1.6a1.6 1.6 0 0 0 1.6 1.9Z" fill="currentColor"/></svg>
+        <span id="path-pill">0%</span>
+      </div>
+    </div>
+  </header>
+
+  <main id="top" class="shell">
+    <section class="intro" data-panel="practice" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">Hành trình Pinyin · 22 bài · 1.612 thẻ</p>
+        <h1 id="page-title">Nghe kỹ. Đọc đúng.<br>Tiến bộ mỗi ngày.</h1>
+        <p class="intro-copy">Mỗi âm tiết được luyện đủ bốn thanh và tự quay lại đúng lúc bạn sắp quên.</p>
+      </div>
+      <div class="date-label">BÀI ĐANG HỌC<strong id="today-focus">Âm đầu môi</strong></div>
+    </section>
+
+    <section class="roadmap" data-panel="roadmap" aria-labelledby="roadmap-title">
+      <div class="roadmap-head">
+        <div><h2 id="roadmap-title">Lộ trình luyện tập</h2><p>Mỗi bài luyện một phụ âm đầu, mỗi âm tiết có đủ bốn thanh. Hoàn thành hết thẻ của bài để mở bài kế tiếp.</p></div>
+        <div class="path-score"><strong id="path-percent">0%</strong><span id="path-count">0 / 1612 thẻ</span></div>
+      </div>
+      <div class="path-progress" role="progressbar" aria-label="Tiến độ toàn lộ trình" aria-valuemin="0" aria-valuemax="1612" aria-valuenow="0"><div class="path-progress-fill" id="path-progress-fill"></div></div>
+      <ol class="roadmap-grid" id="roadmap-list"></ol>
+    </section>
+
+    <section id="practice" class="practice-layout" data-panel="practice" aria-label="Bài luyện hôm nay">
+      <div class="practice-card">
+        <div class="practice-head">
+          <h2 id="session-title">Bài 1 · Âm đầu b</h2>
+          <span class="session-count" id="session-count">Thẻ 1 / 20</span>
+        </div>
+        <ul class="session-mix" id="session-mix"></ul>
+        <div class="progress-track" role="progressbar" aria-label="Tiến độ bài luyện" aria-valuemin="0" aria-valuemax="5" aria-valuenow="1">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <p class="question-label" id="question-label">Nghe âm thanh và chọn thanh điệu đúng</p>
+        <div class="prompt">
+          <div class="prompt-copy"><span>ÂM TIẾT CẦN NGHE</span><strong id="prompt-syllable" lang="zh-Latn">ba</strong></div>
+          <button class="listen-button" id="listen-button" type="button" aria-label="Nghe phát âm"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M15 9.2a4 4 0 0 1 0 5.6M17.8 6.5a8 8 0 0 1 0 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+        </div>
+        <div class="answers" id="answers" role="group" aria-label="Chọn đáp án Pinyin">
+          <button class="answer" type="button" data-answer="mā"><strong class="answer-pinyin">mā</strong><small class="answer-tone">Thanh 1</small></button>
+          <button class="answer" type="button" data-answer="má"><strong class="answer-pinyin">má</strong><small class="answer-tone">Thanh 2</small></button>
+          <button class="answer" type="button" data-answer="mǎ"><strong class="answer-pinyin">mǎ</strong><small class="answer-tone">Thanh 3</small></button>
+          <button class="answer" type="button" data-answer="mà"><strong class="answer-pinyin">mà</strong><small class="answer-tone">Thanh 4</small></button>
+        </div>
+        <p class="feedback" id="feedback" aria-live="polite">Chọn một đáp án để tiếp tục.</p>
+        <div class="practice-foot">
+          <p class="microcopy">Nghe lại bất cứ lúc nào nếu bạn chưa chắc.</p>
+          <button class="primary-button" id="next-button" type="button" disabled>
+            <span id="next-label">Kiểm tra đáp án</span>
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h13m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+        <section class="pronunciation-check" aria-label="Luyện phát âm">
+          <div class="pronunciation-head"><strong>Nghe mẫu, nói lại</strong><output class="pronunciation-score" id="pronunciation-score" aria-live="polite">--/100</output></div>
+          <p class="pronunciation-note">Điểm so sánh đường thanh điệu, chưa chấm âm đầu và vần. Đạt từ 80 điểm sẽ kéo dài khoảng cách ôn tập của thẻ.</p>
+          <div class="pronunciation-actions">
+            <button class="pronunciation-button pronunciation-reference" type="button">Nghe mẫu</button>
+            <button class="pronunciation-button record pronunciation-record" type="button" disabled>Ghi âm</button>
+          </div>
+          <p class="pronunciation-status" id="pronunciation-status" aria-live="polite">Nghe mẫu trước, sau đó đọc âm tiết một lần.</p>
+        </section>
+      </div>
+
+      <aside class="side-card" aria-label="Mục tiêu luyện tập">
+        <p class="eyebrow">Tiến độ lộ trình</p>
+        <h2><span id="side-percent">0%</span> đã hoàn thành.</h2>
+        <p id="side-copy">Mỗi bài mở khóa một nhóm âm mới.</p>
+        <div class="goal-row">
+          <div class="goal-ring" id="goal-ring" aria-label="0 phần trăm">0%</div>
+          <div><strong id="goal-title">0 / 1612 thẻ đã thuộc</strong><span id="goal-caption">0 / 22 bài hoàn thành</span></div>
+        </div>
+        <div class="goal-split">
+          <div><strong id="stat-practiced">0</strong><span>thẻ đã luyện</span></div>
+          <div><strong id="stat-due">0</strong><span>thẻ cần ôn</span></div>
+        </div>
+        <a class="text-link" href="#practice">Tiếp tục bài luyện <span aria-hidden="true">→</span></a>
+      </aside>
+    </section>
+
+    <section id="library" class="library" data-view="matrix" data-panel="library" aria-labelledby="library-title">
+      <div class="section-head">
+        <div><p class="eyebrow">Tra cứu nhanh</p><h2 id="library-title">Bảng âm Pinyin</h2><p>Chọn một âm tiết để nghe cách phát âm.</p></div>
+        <div class="library-tools">
+          <label class="search-wrap">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4.2 4.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <input class="search-input" id="sound-search" type="search" placeholder="Tìm âm tiết, ví dụ: zhi" aria-label="Tìm âm tiết Pinyin">
+          </label>
+          <div class="chart-actions">
+            <div class="view-switch" role="group" aria-label="Cách hiển thị bảng Pinyin">
+              <button type="button" data-view="matrix" aria-pressed="true">Ma trận</button>
+              <button type="button" data-view="grouped" aria-pressed="false">Theo vần</button>
+            </div>
+            <button class="projection-button" id="projection-button" type="button" aria-pressed="false" title="Mở chế độ trình chiếu"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 4H5a1 1 0 0 0-1 1v3m12-4h3a1 1 0 0 1 1 1v3M4 16v3a1 1 0 0 0 1 1h3m12-4v3a1 1 0 0 1-1 1h-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span id="projection-label">Trình chiếu</span></button>
+          </div>
+          <span class="matrix-count" id="matrix-count" aria-live="polite"></span>
+        </div>
+      </div>
+      <div class="matrix-wrap" role="region" aria-label="Ma trận Pinyin, cuộn ngang để xem đủ phụ âm đầu" tabindex="0">
+        <table class="pinyin-matrix" id="pinyin-matrix">
+          <thead><tr id="matrix-head"><th scope="col">Vần</th></tr></thead>
+          <tbody id="matrix-body"></tbody>
+        </table>
+      </div>
+      <div class="grouped-view" id="grouped-view" aria-label="Âm tiết được nhóm theo vần"><div id="grouped-list"></div></div>
+      <div class="empty-state" id="matrix-empty" hidden>Không tìm thấy âm tiết phù hợp.</div>
+      <p class="library-note"><span class="note-mark" aria-hidden="true">i</span><span>Dữ liệu âm tiết và audio tham khảo từ <a href="https://yoyochinese.com/pinyin" target="_blank" rel="noreferrer">Yoyo Chinese</a>. Chọn âm tiết rồi chọn thanh để phát audio đã tải trong workspace.</span></p>
+    </section>
+  </main>
+
+  <dialog class="tone-dialog" id="tone-dialog" aria-labelledby="tone-dialog-title">
+    <div class="tone-dialog-head">
+      <div><h2 id="tone-dialog-title">Chọn thanh điệu</h2><p>Nghe từng thanh để so sánh cách phát âm.</p></div>
+      <button class="dialog-close" id="close-tone-dialog" type="button" aria-label="Đóng">×</button>
+    </div>
+    <div class="tone-choices" id="tone-choices"></div>
+    <p class="audio-status" id="audio-status" aria-live="polite"></p>
+  </dialog>
+
+  <footer><div class="shell">Luyện đều mỗi ngày, từng âm một.</div></footer>
+
+  <nav class="tabbar" id="tabbar" aria-label="Điều hướng học Pinyin">
+    <button type="button" data-tab="practice" aria-current="page"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5v-15Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M4 18a2 2 0 0 1 2-2h14" stroke="currentColor" stroke-width="1.7"/></svg>Học</button>
+    <button type="button" data-tab="roadmap"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 4.5 12 2l7 2.5v15L12 22l-7-2.5v-15Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="m5 4.5 7 2.7m0 0L19 4.5M12 7.2V22" stroke="currentColor" stroke-width="1.7"/></svg>Lộ trình</button>
+    <button type="button" data-tab="library"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" stroke-width="1.7"/><path d="m16 16 4.2 4.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>Bảng âm</button>
+  </nav>
+
+  <script>
+    const lessonPlans = [
+      { title: 'Âm đầu b', initial: 'b', focus: 'Âm môi · tắc không bật hơi' },
+      { title: 'Âm đầu p', initial: 'p', focus: 'Âm môi · tắc bật hơi' },
+      { title: 'Âm đầu m', initial: 'm', focus: 'Âm mũi môi' },
+      { title: 'Âm đầu f', initial: 'f', focus: 'Âm xát môi-răng' },
+      { title: 'Âm đầu d', initial: 'd', focus: 'Đầu lưỡi · tắc không bật hơi' },
+      { title: 'Âm đầu t', initial: 't', focus: 'Đầu lưỡi · tắc bật hơi' },
+      { title: 'Âm đầu n', initial: 'n', focus: 'Âm mũi đầu lưỡi' },
+      { title: 'Âm đầu l', initial: 'l', focus: 'Âm bên đầu lưỡi' },
+      { title: 'Âm đầu g', initial: 'g', focus: 'Cuống lưỡi · tắc không bật hơi' },
+      { title: 'Âm đầu k', initial: 'k', focus: 'Cuống lưỡi · tắc bật hơi' },
+      { title: 'Âm đầu h', initial: 'h', focus: 'Cuống lưỡi · âm xát' },
+      { title: 'Âm đầu j', initial: 'j', focus: 'Mặt lưỡi · tắc không bật hơi' },
+      { title: 'Âm đầu q', initial: 'q', focus: 'Mặt lưỡi · tắc bật hơi' },
+      { title: 'Âm đầu x', initial: 'x', focus: 'Mặt lưỡi · âm xát' },
+      { title: 'Âm đầu z', initial: 'z', focus: 'Đầu lưỡi · tắc-xát không bật hơi' },
+      { title: 'Âm đầu c', initial: 'c', focus: 'Đầu lưỡi · tắc-xát bật hơi' },
+      { title: 'Âm đầu s', initial: 's', focus: 'Đầu lưỡi · âm xát' },
+      { title: 'Âm đầu zh', initial: 'zh', focus: 'Quặt lưỡi · tắc-xát không bật hơi' },
+      { title: 'Âm đầu ch', initial: 'ch', focus: 'Quặt lưỡi · tắc-xát bật hơi' },
+      { title: 'Âm đầu sh', initial: 'sh', focus: 'Quặt lưỡi · âm xát' },
+      { title: 'Âm đầu r', initial: 'r', focus: 'Quặt lưỡi · âm xát hữu thanh' },
+      { title: 'Không phụ âm đầu', initial: '', focus: 'Âm tiết độc lập · cách viết y/w' }
+    ];
+
+    const initials = ['b', 'p', 'm', 'f', 'd', 't', 'n', 'l', 'g', 'k', 'h', 'j', 'q', 'x', 'z', 'c', 's', 'zh', 'ch', 'sh', 'r'];
+    const pinyinRows = [
+      { final: 'i', syllables: 'zi ci si zhi chi shi ri' },
+      { final: 'a', syllables: 'a ba pa ma fa da ta na la ga ka ha za ca sa zha cha sha' },
+      { final: 'ai', syllables: 'ai bai pai mai dai tai nai lai gai kai hai zai cai sai zhai chai shai' },
+      { final: 'an', syllables: 'an ban pan man fan dan tan nan lan gan kan han zan can san zhan chan shan ran' },
+      { final: 'ang', syllables: 'ang bang pang mang fang dang tang nang lang gang kang hang zang cang sang zhang chang shang rang' },
+      { final: 'ao', syllables: 'ao bao pao mao dao tao nao lao gao kao hao zao cao sao zhao chao shao rao' },
+      { final: 'e', syllables: 'e me de te ne le ge ke he ze ce se zhe che she re' },
+      { final: 'ei', syllables: 'ei bei pei mei fei dei nei lei gei hei zei zhei shei' },
+      { final: 'en', syllables: 'en ben pen men fen nen gen ken hen zen cen sen zhen chen shen ren' },
+      { final: 'eng', syllables: 'eng beng peng meng feng deng teng neng leng geng keng heng zeng ceng seng zheng cheng sheng reng' },
+      { final: 'er', syllables: 'er' },
+      { final: 'i', syllables: 'yi bi pi mi di ti ni li ji qi xi' },
+      { final: 'ia', syllables: 'ya dia lia jia qia xia' },
+      { final: 'ian', syllables: 'yan bian pian mian dian tian nian lian jian qian xian' },
+      { final: 'iang', syllables: 'yang niang liang jiang qiang xiang' },
+      { final: 'iao', syllables: 'yao biao piao miao diao tiao niao liao jiao qiao xiao' },
+      { final: 'ie', syllables: 'ye bie pie mie die tie nie lie jie qie xie' },
+      { final: 'in', syllables: 'yin bin pin min nin lin jin qin xin' },
+      { final: 'ing', syllables: 'ying bing ping ming ding ting ning ling jing qing xing' },
+      { final: 'iong', syllables: 'yong jiong qiong xiong' },
+      { final: 'iou', syllables: 'you miu diu niu liu jiu qiu xiu' },
+      { final: 'o', syllables: 'o bo po mo fo' },
+      { final: 'ong', syllables: 'dong tong nong long gong kong hong zong cong song zhong chong rong' },
+      { final: 'ou', syllables: 'ou pou mou fou dou tou lou gou kou hou zou cou sou zhou chou shou rou' },
+      { final: 'u', syllables: 'wu bu pu mu fu du tu nu lu gu ku hu zu cu su zhu chu shu ru' },
+      { final: 'ua', syllables: 'wa gua kua hua zhua shua' },
+      { final: 'uai', syllables: 'wai guai kuai huai zhuai chuai shuai' },
+      { final: 'uan', syllables: 'wan duan tuan nuan luan guan kuan huan zuan cuan suan zhuan chuan shuan ruan' },
+      { final: 'uang', syllables: 'wang guang kuang huang zhuang chuang shuang' },
+      { final: 'uei', syllables: 'wei dui tui gui kui hui zui cui sui zhui chui shui rui' },
+      { final: 'uen', syllables: 'wen dun tun lun gun kun hun zun cun sun zhun chun shun run' },
+      { final: 'ueng', syllables: 'weng' },
+      { final: 'uo', syllables: 'wo duo tuo nuo luo guo kuo huo zuo cuo suo zhuo chuo shuo ruo' },
+      { final: 'ü', syllables: 'yu nü lü ju qu xu' },
+      { final: 'üan', syllables: 'yuan juan quan xuan' },
+      { final: 'üe', syllables: 'yue nüe lüe jue que xue' },
+      { final: 'ün', syllables: 'yun jun qun xun' }
+    ];
+
+    const toneVowels = {
+      a: ['ā', 'á', 'ǎ', 'à'], e: ['ē', 'é', 'ě', 'è'], i: ['ī', 'í', 'ǐ', 'ì'],
+      o: ['ō', 'ó', 'ǒ', 'ò'], u: ['ū', 'ú', 'ǔ', 'ù'], ü: ['ǖ', 'ǘ', 'ǚ', 'ǜ']
+    };
+
+    /* ===================== Thẻ luyện tập: mỗi âm tiết × 4 thanh ===================== */
+    const TONES = [1, 2, 3, 4];
+    const sortedInitials = [...initials].sort((first, second) => second.length - first.length);
+    const syllableRecords = pinyinRows.flatMap((row) => row.syllables.split(' ').map((syllable) => ({
+      syllable,
+      final: row.final,
+      initial: sortedInitials.find((candidate) => syllable.startsWith(candidate)) || ''
+    })));
+    const totalPinyinSyllables = syllableRecords.length;
+
+    const lessons = lessonPlans.map((plan) => {
+      const records = syllableRecords.filter((record) => record.initial === plan.initial);
+      const cards = records.flatMap((record) => TONES.map((tone) => ({
+        key: `${record.syllable}${tone}`,
+        syllable: record.syllable,
+        tone,
+        final: record.final,
+        initial: record.initial,
+        answer: markTone(record.syllable, tone),
+        choices: TONES.map((value) => markTone(record.syllable, value))
+      })));
+      return { title: plan.title, focus: plan.focus, initial: plan.initial, cards };
+    });
+
+    const allCards = lessons.flatMap((lesson) => lesson.cards);
+    const totalCards = allCards.length;
+    const cardByKey = new Map(allCards.map((card) => [card.key, card]));
+    if (cardByKey.size !== totalCards || totalCards !== totalPinyinSyllables * TONES.length) {
+      throw new Error('Mỗi âm tiết phải sinh đúng bốn thẻ thanh điệu, không trùng khóa.');
+    }
+
+    /* ===================== Lặp ngắt quãng (SM-2 rút gọn) ===================== */
+    const srsStorageKey = 'pinyin-srs-v3';
+    const legacyProgressKey = 'pinyin-learning-progress-v2';
+    const DAY_MS = 86400000;
+    const SESSION_SIZE = 20;         // số thẻ của một phiên
+    // Thẻ đến hạn được ưu tiên lấp chỗ trước, nếu không tồn đọng ôn tập sẽ phình vô hạn:
+    // mỗi thẻ mới sinh ra nhiều lượt ôn, nên tốc độ nạp thẻ mới phải chịu trần theo tải ôn.
+    // MIN_FRESH giữ lại vài chỗ cho thẻ mới để lộ trình vẫn tiến dù đang nợ ôn tập.
+    const MIN_FRESH = 4;
+    const MASTERED_INTERVAL = 7;     // khoảng cách (ngày) để coi một thẻ là đã thuộc
+    const RELEARN_GAP = 4;           // trả lời sai thì thẻ quay lại sau bấy nhiêu thẻ
+
+    const todayNumber = () => Math.floor(Date.now() / DAY_MS);
+
+    function readLegacyUnlock() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(legacyProgressKey) || '[]');
+        if (!Array.isArray(saved)) return 0;
+        const valid = saved.filter((index) => Number.isInteger(index) && index >= 0 && index < lessons.length);
+        return valid.length ? Math.min(lessons.length - 1, Math.max(...valid) + 1) : 0;
+      } catch {
+        return 0;
+      }
+    }
+
+    function loadSrs() {
+      const store = new Map();
+      let unlock = null;
+      try {
+        const saved = JSON.parse(localStorage.getItem(srsStorageKey) || 'null');
+        if (saved && saved.v === 3 && saved.cards) {
+          unlock = Number.isInteger(saved.unlock) ? saved.unlock : null;
+          for (const [key, value] of Object.entries(saved.cards)) {
+            if (!cardByKey.has(key) || !Array.isArray(value)) continue;
+            const [reps, ease, interval, due, lapses, best] = value;
+            store.set(key, {
+              reps: Number(reps) || 0,
+              ease: (Number(ease) || 250) / 100,
+              interval: Number(interval) || 0,
+              due: Number(due) || todayNumber(),
+              lapses: Number(lapses) || 0,
+              best: Number(best) || 0
+            });
+          }
+        }
+      } catch {
+        // Dữ liệu hỏng thì bắt đầu lại thay vì chặn cả trang.
+      }
+      return { store, unlock };
+    }
+
+    const restored = loadSrs();
+    const srs = restored.store;
+    // Bản v2 chỉ lưu danh sách ngày đã xong, không lưu trạng thái từng thẻ. Chỉ giữ lại
+    // quyền mở bài, không bịa lịch sử ôn tập cho 1612 thẻ.
+    let unlockFloor = Math.min(lessons.length - 1, restored.unlock ?? readLegacyUnlock());
+    const sessionPronunciation = new Map();
+
+    function saveSrs() {
+      const cards = {};
+      for (const [key, state] of srs) {
+        cards[key] = [state.reps, Math.round(state.ease * 100), state.interval, state.due, state.lapses, state.best];
+      }
+      try {
+        localStorage.setItem(srsStorageKey, JSON.stringify({ v: 3, unlock: unlockFloor, cards }));
+      } catch {
+        setFeedback('Tiến độ đang dùng trong phiên này nhưng chưa thể lưu trên thiết bị.', '');
+      }
+    }
+
+    const isPracticed = (key) => srs.has(key);
+    const isMastered = (key) => (srs.get(key)?.interval ?? 0) >= MASTERED_INTERVAL;
+    const isDue = (key) => {
+      const state = srs.get(key);
+      return Boolean(state) && state.due <= todayNumber();
+    };
+    const lessonPracticedCount = (lesson) => lesson.cards.reduce((total, card) => total + (isPracticed(card.key) ? 1 : 0), 0);
+    const lessonIsComplete = (lesson) => lessonPracticedCount(lesson) === lesson.cards.length;
+
+    function maxUnlockedIndex() {
+      let index = 0;
+      while (index < lessons.length - 1 && lessonIsComplete(lessons[index])) index += 1;
+      return Math.max(index, unlockFloor);
+    }
+
+    function countDueCards() {
+      const limit = maxUnlockedIndex();
+      return lessons.slice(0, limit + 1).reduce(
+        (total, lesson) => total + lesson.cards.reduce((count, card) => count + (isDue(card.key) ? 1 : 0), 0),
+        0
+      );
+    }
+
+    function bestPronunciation(key) {
+      return Math.max(srs.get(key)?.best ?? 0, sessionPronunciation.get(key) ?? 0);
+    }
+
+    function gradeCard(key, grade) {
+      const state = srs.get(key) || { reps: 0, ease: 2.5, interval: 0, due: todayNumber(), lapses: 0, best: 0 };
+      if (grade < 3) {
+        state.lapses += 1;
+        state.reps = 0;
+        state.interval = 0;
+        state.due = todayNumber();
+        state.ease = Math.max(1.3, state.ease - 0.2);
+      } else {
+        state.reps += 1;
+        state.interval = state.reps === 1 ? 1 : state.reps === 2 ? 3 : Math.max(1, Math.round(state.interval * state.ease));
+        const distance = 5 - grade;
+        state.ease = Math.min(2.8, Math.max(1.3, state.ease + 0.1 - distance * (0.08 + distance * 0.02)));
+        state.due = todayNumber() + state.interval;
+      }
+      state.best = Math.max(state.best, bestPronunciation(key));
+      srs.set(key, state);
+      saveSrs();
+      return state;
+    }
+
+    /* ===================== Phiên luyện ===================== */
+    function shuffle(items) {
+      for (let index = items.length - 1; index > 0; index -= 1) {
+        const swap = Math.floor(Math.random() * (index + 1));
+        [items[index], items[swap]] = [items[swap], items[index]];
+      }
+      return items;
+    }
+
+    let session = null;
+    let currentLessonIndex = 0;
+    let selectedAnswer = '';
+    let answered = false;
+    let sessionComplete = false;
+    let questionToken = 0;
+
+    function buildSession(lessonIndex) {
+      const lesson = lessons[lessonIndex];
+      const limit = maxUnlockedIndex();
+      const chosen = new Set();
+      const reviews = lessons.slice(0, limit + 1)
+        .flatMap((item) => item.cards)
+        .filter((card) => isDue(card.key))
+        .sort((first, second) => srs.get(first.key).due - srs.get(second.key).due)
+        .slice(0, Math.max(0, SESSION_SIZE - MIN_FRESH));
+      reviews.forEach((card) => chosen.add(card.key));
+
+      const fresh = lesson.cards
+        .filter((card) => !chosen.has(card.key) && !isPracticed(card.key))
+        .slice(0, Math.max(0, SESSION_SIZE - reviews.length));
+      fresh.forEach((card) => chosen.add(card.key));
+
+      const picks = [...reviews, ...fresh];
+      if (picks.length < SESSION_SIZE) {
+        // Hết thẻ mới lẫn thẻ đến hạn thì ôn sớm những thẻ yếu nhất của bài.
+        const early = lesson.cards
+          .filter((card) => !chosen.has(card.key) && isPracticed(card.key))
+          .sort((first, second) => srs.get(first.key).ease - srs.get(second.key).ease
+            || srs.get(first.key).due - srs.get(second.key).due)
+          .slice(0, SESSION_SIZE - picks.length);
+        picks.push(...early);
+      }
+
+      session = {
+        lessonIndex,
+        queue: shuffle(picks.map((card) => card.key)),
+        target: picks.length,
+        reviewCount: reviews.length,
+        freshCount: fresh.length,
+        graded: new Set(),
+        finished: 0,
+        correct: 0
+      };
+    }
+
+    const currentKey = () => (session && session.queue.length ? session.queue[0] : '');
+    const currentCard = () => cardByKey.get(currentKey()) || lessons[currentLessonIndex].cards[0];
+
+    function describeCard(card) {
+      const onset = card.initial ? `âm đầu ${card.initial}` : 'không phụ âm đầu';
+      return `${onset} · vần ${card.final} · thanh ${card.tone}`;
+    }
+
+    function setFeedback(text, tone) {
+      feedback.textContent = text;
+      feedback.className = tone ? `feedback ${tone}` : 'feedback';
+    }
+
+    function markTone(syllable, tone) {
+      const characters = [...syllable];
+      let index = characters.indexOf('a');
+      if (index === -1) index = characters.indexOf('e');
+      if (index === -1 && syllable.includes('ou')) index = characters.indexOf('o');
+      if (index === -1) {
+        for (let position = characters.length - 1; position >= 0; position -= 1) {
+          if (toneVowels[characters[position]]) {
+            index = position;
+            break;
+          }
+        }
+      }
+      if (index !== -1 && toneVowels[characters[index]]) characters[index] = toneVowels[characters[index]][tone - 1];
+      return characters.join('');
+    }
+
+    function openToneDialog(syllable) {
+      document.querySelector('#tone-dialog-title').textContent = `Âm ${syllable}`;
+      toneChoices.replaceChildren();
+      for (let tone = 1; tone <= 4; tone += 1) {
+        const button = document.createElement('button');
+        const pinyin = markTone(syllable, tone);
+        const label = document.createElement('span');
+        const value = document.createElement('strong');
+        button.type = 'button';
+        button.className = 'tone-choice';
+        value.textContent = pinyin;
+        label.textContent = `Thanh ${tone}`;
+        button.append(value, label);
+        button.addEventListener('click', () => playPinyin(pinyin));
+        toneChoices.append(button);
+      }
+      audioStatus.textContent = '';
+      if (!toneDialog.open) toneDialog.showModal();
+    }
+
+    /* ===================== Tham chiếu DOM (một cây duy nhất) ===================== */
+    const answerButtons = [...document.querySelectorAll('.answer')];
+    const feedback = document.querySelector('#feedback');
+    const nextButton = document.querySelector('#next-button');
+    const nextLabel = document.querySelector('#next-label');
+    const progress = document.querySelector('.progress-track');
+    const progressFill = document.querySelector('#progress-fill');
+    const promptSyllable = document.querySelector('#prompt-syllable');
+    const sessionTitle = document.querySelector('#session-title');
+    const sessionCountLabel = document.querySelector('#session-count');
+    const sessionMix = document.querySelector('#session-mix');
+    const questionLabel = document.querySelector('#question-label');
+    const roadmapList = document.querySelector('#roadmap-list');
+    const toneDialog = document.querySelector('#tone-dialog');
+    const toneChoices = document.querySelector('#tone-choices');
+    const audioStatus = document.querySelector('#audio-status');
+    const duePill = document.querySelector('#due-pill');
+    const tabbar = document.querySelector('#tabbar');
+    const toneMarkMap = {
+      'ā': ['a', 1], 'á': ['a', 2], 'ǎ': ['a', 3], 'à': ['a', 4],
+      'ē': ['e', 1], 'é': ['e', 2], 'ě': ['e', 3], 'è': ['e', 4],
+      'ī': ['i', 1], 'í': ['i', 2], 'ǐ': ['i', 3], 'ì': ['i', 4],
+      'ō': ['o', 1], 'ó': ['o', 2], 'ǒ': ['o', 3], 'ò': ['o', 4],
+      'ū': ['u', 1], 'ú': ['u', 2], 'ǔ': ['u', 3], 'ù': ['u', 4],
+      'ǖ': ['ü', 1], 'ǘ': ['ü', 2], 'ǚ': ['ü', 3], 'ǜ': ['ü', 4]
+    };
+
+    function speak(text) {
+      if (!('speechSynthesis' in window)) {
+        feedback.textContent = 'Trình duyệt này chưa hỗ trợ phát âm tự động.';
+        return;
+      }
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'zh-CN';
+      utterance.rate = 0.78;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function getAudioTrack(pinyin) {
+      let base = '';
+      let tone = 0;
+      for (const character of pinyin.normalize('NFC')) {
+        if (toneMarkMap[character]) {
+          base += toneMarkMap[character][0];
+          tone = toneMarkMap[character][1];
+        } else {
+          base += character;
+        }
+      }
+      if (!tone) return null;
+      if (base === 'nüe') base = 'nue';
+      else base = base.replaceAll('ü', 'v');
+      return `${base}${tone}`;
+    }
+
+    let activeAudio = null;
+    let pronunciationAudioContext = null;
+    let referenceAudio = null;
+    let referenceCaptureFrame = 0;
+    let referenceCaptureToken = 0;
+    let referencePitchContour = [];
+    let referenceQuestionKey = '';
+    let microphoneStream = null;
+    let microphoneSource = null;
+    let microphoneAnalyser = null;
+    let microphoneCaptureFrame = 0;
+    let microphoneCaptureToken = 0;
+    let microphonePitchContour = [];
+    let recordingQuestionKey = '';
+    let recordingTimeout = null;
+    let isPronunciationRecording = false;
+    let isReferenceLoading = false;
+
+    function playPinyin(pinyin) {
+      const track = getAudioTrack(pinyin);
+      if (!track) {
+        audioStatus.textContent = 'Bản thu này không có trên CDN; đang dùng giọng đọc của trình duyệt.';
+        speak(pinyin);
+        return;
+      }
+      if (activeAudio) {
+        activeAudio.pause();
+        activeAudio.currentTime = 0;
+      }
+      const audioUrl = new URL(`audio/pychart/${track}.mp3`, window.location.href);
+      const audio = new Audio(audioUrl.href);
+      activeAudio = audio;
+      audio.preload = 'auto';
+      let fallbackUsed = false;
+      const fallback = () => {
+        if (fallbackUsed) return;
+        fallbackUsed = true;
+        audioStatus.textContent = 'Không tải được audio; đang dùng giọng đọc của trình duyệt.';
+        speak(pinyin);
+      };
+      audio.addEventListener('error', fallback, { once: true });
+      audio.play().then(() => {
+        audioStatus.textContent = `Đang phát ${pinyin}.`;
+      }).catch(fallback);
+    }
+
+    // Mỗi lần hiện một thẻ là một phiên chấm phát âm riêng, kể cả khi thẻ cũ quay lại.
+    function getPronunciationQuestionKey() {
+      return String(questionToken);
+    }
+
+    function recordPronunciationScore(score) {
+      const key = currentKey();
+      if (!key) return;
+      sessionPronunciation.set(key, Math.max(sessionPronunciation.get(key) ?? 0, score));
+      const state = srs.get(key);
+      if (state && score > state.best) {
+        state.best = score;
+        saveSrs();
+      }
+    }
+
+    function updatePronunciationUI(message, score = null) {
+      const best = currentKey() ? bestPronunciation(currentKey()) : 0;
+      document.querySelectorAll('.pronunciation-status').forEach((status) => {
+        status.textContent = best && score === null ? `${message} Điểm cao nhất của thẻ này: ${best}/100.` : message;
+      });
+      document.querySelectorAll('.pronunciation-score').forEach((output) => {
+        output.textContent = score === null ? (best ? `${best}/100` : '--/100') : `${score}/100`;
+      });
+      const canRecord = referencePitchContour.length >= 8 && referenceQuestionKey === getPronunciationQuestionKey();
+      document.querySelectorAll('.pronunciation-reference').forEach((button) => {
+        button.disabled = isPronunciationRecording || isReferenceLoading;
+      });
+      document.querySelectorAll('.pronunciation-record').forEach((button) => {
+        button.disabled = !isPronunciationRecording && !canRecord;
+        button.textContent = isPronunciationRecording ? 'Dừng ghi âm' : 'Ghi âm';
+      });
+    }
+
+    function getPronunciationAudioContext() {
+      const AudioContextType = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextType) throw new Error('Web Audio không được hỗ trợ.');
+      if (!pronunciationAudioContext) pronunciationAudioContext = new AudioContextType();
+      return pronunciationAudioContext;
+    }
+
+    function estimateFundamentalFrequency(samples, sampleRate) {
+      const decimation = 2;
+      const signal = new Float32Array(Math.floor(samples.length / decimation));
+      let mean = 0;
+      for (let index = 0; index < signal.length; index += 1) {
+        signal[index] = samples[index * decimation];
+        mean += signal[index];
+      }
+      mean /= signal.length || 1;
+      let energy = 0;
+      for (let index = 0; index < signal.length; index += 1) {
+        signal[index] -= mean;
+        energy += signal[index] * signal[index];
+      }
+      if (Math.sqrt(energy / signal.length) < 0.008) return null;
+
+      const effectiveRate = sampleRate / decimation;
+      const minLag = Math.floor(effectiveRate / 500);
+      const maxLag = Math.min(Math.floor(effectiveRate / 70), Math.floor(signal.length / 2));
+      const differences = new Float32Array(maxLag + 1);
+      for (let lag = minLag; lag <= maxLag; lag += 1) {
+        let difference = 0;
+        for (let index = 0; index < signal.length - lag; index += 1) {
+          const delta = signal[index] - signal[index + lag];
+          difference += delta * delta;
+        }
+        differences[lag] = difference;
+      }
+      const normalizedDifference = new Float32Array(maxLag + 1);
+      let cumulativeDifference = 0;
+      for (let lag = minLag; lag <= maxLag; lag += 1) {
+        cumulativeDifference += differences[lag];
+        normalizedDifference[lag] = differences[lag] * (lag - minLag + 1) / (cumulativeDifference || 1);
+      }
+      let bestLag = 0;
+      for (let lag = minLag; lag < maxLag; lag += 1) {
+        if (normalizedDifference[lag] < 0.18) {
+          while (lag < maxLag && normalizedDifference[lag + 1] < normalizedDifference[lag]) lag += 1;
+          bestLag = lag;
+          break;
+        }
+      }
+      if (!bestLag) {
+        let bestDifference = 0.35;
+        for (let lag = minLag; lag <= maxLag; lag += 1) {
+          if (normalizedDifference[lag] < bestDifference) {
+            bestDifference = normalizedDifference[lag];
+            bestLag = lag;
+          }
+        }
+      }
+      if (!bestLag) return null;
+
+      const before = normalizedDifference[bestLag - 1] || normalizedDifference[bestLag];
+      const center = normalizedDifference[bestLag];
+      const after = normalizedDifference[bestLag + 1] || center;
+      const denominator = before - 2 * center + after;
+      const correction = denominator ? 0.5 * (before - after) / denominator : 0;
+      return effectiveRate / (bestLag + correction);
+    }
+
+    function extractPitchContour(audioBuffer) {
+      const samples = audioBuffer.getChannelData(0);
+      const frameSize = Math.floor(audioBuffer.sampleRate * 0.04);
+      const hopSize = Math.floor(audioBuffer.sampleRate * 0.02);
+      const contour = [];
+      for (let start = 0; start + frameSize <= samples.length; start += hopSize) {
+        const pitch = estimateFundamentalFrequency(samples.subarray(start, start + frameSize), audioBuffer.sampleRate);
+        if (pitch) contour.push(pitch);
+      }
+      return contour;
+    }
+
+    function normalizePitchContour(contour, pointCount = 24) {
+      const semitones = contour.map((pitch) => 12 * Math.log2(pitch));
+      const sorted = [...semitones].sort((first, second) => first - second);
+      const center = sorted[Math.floor(sorted.length / 2)];
+      return Array.from({ length: pointCount }, (_, index) => {
+        const position = index * (semitones.length - 1) / (pointCount - 1);
+        const lower = Math.floor(position);
+        const upper = Math.min(lower + 1, semitones.length - 1);
+        const fraction = position - lower;
+        return semitones[lower] + (semitones[upper] - semitones[lower]) * fraction - center;
+      });
+    }
+
+    function scorePitchContours(reference, attempt) {
+      if (reference.length < 8 || attempt.length < 8) return null;
+      const expected = normalizePitchContour(reference);
+      const actual = normalizePitchContour(attempt);
+      const squaredError = expected.reduce((total, value, index) => total + (value - actual[index]) ** 2, 0) / expected.length;
+      const score = Math.max(0, Math.min(100, Math.round(100 - Math.sqrt(squaredError) * 34)));
+      return score;
+    }
+
+    function resetPronunciationState() {
+      referenceCaptureToken += 1;
+      if (referenceCaptureFrame) cancelAnimationFrame(referenceCaptureFrame);
+      referenceCaptureFrame = 0;
+      if (referenceAudio) {
+        referenceAudio.pause();
+        if (activeAudio === referenceAudio) activeAudio = null;
+        referenceAudio = null;
+      }
+      referencePitchContour = [];
+      referenceQuestionKey = '';
+      isReferenceLoading = false;
+      if (isPronunciationRecording) stopPronunciationRecording(true);
+      updatePronunciationUI('Nghe mẫu trước, sau đó đọc âm tiết một lần.');
+    }
+
+    async function playReferenceSample() {
+      const card = currentCard();
+      const track = getAudioTrack(card.answer);
+      if (!track) {
+        updatePronunciationUI('Không tìm thấy audio mẫu cho âm tiết này.');
+        return;
+      }
+      if (activeAudio) {
+        activeAudio.pause();
+        activeAudio.currentTime = 0;
+      }
+      referencePitchContour = [];
+      referenceQuestionKey = '';
+      isReferenceLoading = true;
+      updatePronunciationUI('Đang phát và phân tích bản mẫu...');
+
+      let audio;
+      let source;
+      let analyser;
+      let finished = false;
+      const samples = [];
+      const questionKey = getPronunciationQuestionKey();
+      const captureToken = ++referenceCaptureToken;
+      const finish = (message) => {
+        if (finished) return;
+        finished = true;
+        if (referenceCaptureFrame) cancelAnimationFrame(referenceCaptureFrame);
+        referenceCaptureFrame = 0;
+        source?.disconnect();
+        analyser?.disconnect();
+        if (referenceAudio === audio) referenceAudio = null;
+        isReferenceLoading = false;
+        if (captureToken !== referenceCaptureToken || questionKey !== getPronunciationQuestionKey()) return;
+        if (samples.length >= 8) {
+          referencePitchContour = samples;
+          referenceQuestionKey = questionKey;
+          updatePronunciationUI('Mẫu sẵn sàng. Ghi âm và đọc âm tiết một lần.');
+        } else {
+          updatePronunciationUI(message || 'Không phân tích được mẫu. Hãy mở trang qua localhost hoặc HTTPS.');
+        }
+      };
+
+      try {
+        const context = getPronunciationAudioContext();
+        await context.resume();
+        audio = new Audio();
+        audio.crossOrigin = 'anonymous';
+        audio.preload = 'auto';
+        audio.src = new URL(`audio/pychart/${track}.mp3`, window.location.href).href;
+        source = context.createMediaElementSource(audio);
+        analyser = context.createAnalyser();
+        analyser.fftSize = 2048;
+        analyser.smoothingTimeConstant = 0;
+        source.connect(analyser);
+        analyser.connect(context.destination);
+        referenceAudio = audio;
+        activeAudio = audio;
+        audio.addEventListener('ended', () => finish('Không thể đọc đường cao độ của mẫu.'), { once: true });
+        audio.addEventListener('error', () => finish('Không tải được audio mẫu để chấm điểm.'), { once: true });
+        await audio.play();
+        const frame = new Float32Array(analyser.fftSize);
+        const capture = () => {
+          if (captureToken !== referenceCaptureToken || audio.ended) return;
+          analyser.getFloatTimeDomainData(frame);
+          const pitch = estimateFundamentalFrequency(frame, context.sampleRate);
+          if (pitch) samples.push(pitch);
+          referenceCaptureFrame = requestAnimationFrame(capture);
+        };
+        capture();
+      } catch {
+        finish('Không thể phân tích mẫu. Hãy mở trang qua localhost hoặc HTTPS.');
+      }
+    }
+
+    function stopPronunciationRecording(discard = false) {
+      if (!isPronunciationRecording) return;
+      const questionKey = recordingQuestionKey;
+      const reference = referencePitchContour.slice();
+      const attempt = microphonePitchContour.slice();
+      microphoneCaptureToken += 1;
+      if (microphoneCaptureFrame) cancelAnimationFrame(microphoneCaptureFrame);
+      microphoneCaptureFrame = 0;
+      microphoneStream?.getTracks().forEach((track) => track.stop());
+      microphoneSource?.disconnect();
+      microphoneAnalyser?.disconnect();
+      microphoneStream = null;
+      microphoneSource = null;
+      microphoneAnalyser = null;
+      microphonePitchContour = [];
+      recordingQuestionKey = '';
+      isPronunciationRecording = false;
+      clearTimeout(recordingTimeout);
+      if (discard || questionKey !== getPronunciationQuestionKey()) return;
+
+      const score = scorePitchContours(reference, attempt);
+      if (score === null) {
+        updatePronunciationUI('Chưa nghe rõ giọng. Hãy đọc một âm tiết ở nơi yên tĩnh rồi thử lại.');
+        return;
+      }
+      recordPronunciationScore(score);
+      const assessment = score >= 85 ? 'Rất sát mẫu' : score >= 65 ? 'Khá gần mẫu' : 'Hãy nghe lại mẫu và thử thêm';
+      const bonus = score >= 80 ? ' Thẻ này được tính mức nhớ tốt nhất khi bạn trả lời đúng.' : '';
+      updatePronunciationUI(`${assessment}. Điểm chỉ phản ánh đường thanh điệu.${bonus}`, score);
+    }
+
+    async function togglePronunciationRecording() {
+      if (isPronunciationRecording) {
+        stopPronunciationRecording();
+        return;
+      }
+      if (referenceQuestionKey !== getPronunciationQuestionKey() || referencePitchContour.length < 8) {
+        updatePronunciationUI('Hãy nghe hết bản mẫu trước khi ghi âm.');
+        return;
+      }
+      if (!navigator.mediaDevices?.getUserMedia || !(window.AudioContext || window.webkitAudioContext)) {
+        updatePronunciationUI('Trình duyệt chưa hỗ trợ ghi âm. Hãy thử Chrome, Edge hoặc Safari mới.');
+        return;
+      }
+
+      const questionKey = getPronunciationQuestionKey();
+      let stream;
+      let source;
+      let analyser;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        if (questionKey !== getPronunciationQuestionKey()) {
+          stream.getTracks().forEach((track) => track.stop());
+          return;
+        }
+        const context = getPronunciationAudioContext();
+        await context.resume();
+        source = context.createMediaStreamSource(stream);
+        analyser = context.createAnalyser();
+        analyser.fftSize = 2048;
+        analyser.smoothingTimeConstant = 0;
+        source.connect(analyser);
+        microphoneStream = stream;
+        microphoneSource = source;
+        microphoneAnalyser = analyser;
+        microphonePitchContour = [];
+        recordingQuestionKey = questionKey;
+        isPronunciationRecording = true;
+        const captureToken = ++microphoneCaptureToken;
+        const frame = new Float32Array(analyser.fftSize);
+        const capture = () => {
+          if (!isPronunciationRecording || captureToken !== microphoneCaptureToken) return;
+          analyser.getFloatTimeDomainData(frame);
+          const pitch = estimateFundamentalFrequency(frame, context.sampleRate);
+          if (pitch) microphonePitchContour.push(pitch);
+          microphoneCaptureFrame = requestAnimationFrame(capture);
+        };
+        capture();
+        updatePronunciationUI('Đang ghi âm. Đọc âm tiết một lần rồi nhấn Dừng ghi âm.');
+        recordingTimeout = setTimeout(() => stopPronunciationRecording(), 4000);
+      } catch {
+        stream?.getTracks().forEach((track) => track.stop());
+        source?.disconnect();
+        analyser?.disconnect();
+        isPronunciationRecording = false;
+        updatePronunciationUI('Không truy cập được microphone. Hãy cấp quyền và dùng localhost hoặc HTTPS.');
+      }
+    }
+
+    /* ===================== Hiển thị ===================== */
+    function renderSessionMix() {
+      const early = session.target - session.reviewCount - session.freshCount;
+      const chips = [];
+      if (session.reviewCount) chips.push(['is-review', session.reviewCount, 'thẻ đến hạn']);
+      if (session.freshCount) chips.push(['is-new', session.freshCount, 'thẻ mới']);
+      if (early > 0) chips.push(['', early, 'thẻ ôn sớm']);
+      chips.push(['', session.queue.length, 'thẻ còn trong hàng đợi']);
+      sessionMix.replaceChildren(...chips.map(([variant, value, label]) => {
+        const chip = document.createElement('li');
+        const count = document.createElement('b');
+        chip.className = variant ? `mix-chip ${variant}` : 'mix-chip';
+        count.textContent = String(value);
+        chip.append(count, document.createTextNode(` ${label}`));
+        return chip;
+      }));
+    }
+
+    function updateRoadmap() {
+      const practiced = allCards.reduce((total, card) => total + (isPracticed(card.key) ? 1 : 0), 0);
+      const mastered = allCards.reduce((total, card) => total + (isMastered(card.key) ? 1 : 0), 0);
+      const due = countDueCards();
+      const percent = Math.round((practiced / totalCards) * 100);
+      const unlocked = maxUnlockedIndex();
+      const completedLessons = lessons.reduce((total, lesson) => total + (lessonIsComplete(lesson) ? 1 : 0), 0);
+      const lesson = lessons[currentLessonIndex];
+      const nextIndex = lessons.findIndex((item) => !lessonIsComplete(item));
+      const nextLesson = lessons[nextIndex === -1 ? lessons.length - 1 : nextIndex];
+
+      document.querySelector('#path-percent').textContent = `${percent}%`;
+      document.querySelector('#side-percent').textContent = `${percent}%`;
+      document.querySelector('#path-pill').textContent = `${percent}%`;
+      document.querySelector('#path-count').textContent = `${practiced} / ${totalCards} thẻ`;
+      document.querySelector('#path-progress-fill').style.width = `${percent}%`;
+      const pathProgress = document.querySelector('.path-progress');
+      pathProgress.setAttribute('aria-valuemax', String(totalCards));
+      pathProgress.setAttribute('aria-valuenow', String(practiced));
+      document.querySelector('#goal-ring').textContent = `${percent}%`;
+      document.querySelector('#goal-ring').setAttribute('aria-label', `${percent} phần trăm thẻ đã luyện`);
+      document.querySelector('#goal-title').textContent = `${mastered} / ${totalCards} thẻ đã thuộc`;
+      document.querySelector('#goal-caption').textContent = `${completedLessons} / ${lessons.length} bài đã phủ hết thẻ`;
+      document.querySelector('#stat-practiced').textContent = String(practiced);
+      document.querySelector('#stat-due').textContent = String(due);
+      const lessonRemaining = lesson.cards.length - lessonPracticedCount(lesson);
+      document.querySelector('#side-copy').textContent = completedLessons === lessons.length
+        ? 'Bạn đã luyện qua toàn bộ thẻ. Giờ chỉ còn việc ôn đúng hạn.'
+        : nextLesson === lesson
+          ? `Bài đang học còn ${lessonRemaining} thẻ chưa luyện.`
+          : `Bài tiếp theo: ${nextLesson.title} · ${nextLesson.cards.length} thẻ`;
+      document.querySelector('#today-focus').textContent = lesson.title;
+      sessionTitle.textContent = `Bài ${currentLessonIndex + 1} · ${lesson.title}`;
+
+      duePill.hidden = due === 0;
+      duePill.textContent = `${due} thẻ cần ôn`;
+
+      roadmapList.replaceChildren();
+      lessons.forEach((item, index) => {
+        const practisedHere = lessonPracticedCount(item);
+        const isComplete = practisedHere === item.cards.length;
+        const isLocked = index > unlocked;
+        const entry = document.createElement('li');
+        const button = document.createElement('button');
+        const number = document.createElement('span');
+        const title = document.createElement('strong');
+        const detail = document.createElement('small');
+        const status = document.createElement('small');
+        const bar = document.createElement('span');
+        const fill = document.createElement('span');
+        button.type = 'button';
+        button.className = `roadmap-day${isComplete ? ' is-complete' : ''}`;
+        button.disabled = isLocked;
+        button.setAttribute('aria-current', index === currentLessonIndex ? 'step' : 'false');
+        number.className = 'day-number';
+        number.textContent = `BÀI ${String(index + 1).padStart(2, '0')}`;
+        title.textContent = item.title;
+        detail.textContent = `${practisedHere}/${item.cards.length} thẻ · ${item.focus}`;
+        status.textContent = isComplete ? 'Đã phủ hết thẻ' : isLocked ? 'Mở sau' : index === currentLessonIndex ? 'Đang học' : 'Bắt đầu';
+        bar.className = 'day-bar';
+        fill.className = 'day-bar-fill';
+        fill.style.width = `${Math.round((practisedHere / item.cards.length) * 100)}%`;
+        bar.append(fill);
+        button.setAttribute('aria-label', `${status.textContent}, bài ${index + 1}: ${item.title}, ${practisedHere} trên ${item.cards.length} thẻ đã luyện`);
+        button.append(number, title, detail, bar, status);
+        button.addEventListener('click', () => {
+          startSession(index);
+          setPanel('practice');
+          document.querySelector('#practice').scrollIntoView({ behavior: 'smooth' });
+        });
+        entry.append(button);
+        roadmapList.append(entry);
+      });
+    }
+
+    function renderQuestion() {
+      const card = currentCard();
+      questionToken += 1;
+      resetPronunciationState();
+      selectedAnswer = '';
+      answered = false;
+      promptSyllable.textContent = card.syllable;
+      sessionCountLabel.textContent = `Thẻ ${Math.min(session.finished + 1, session.target)} / ${session.target}`;
+      questionLabel.textContent = `Nghe âm thanh và chọn thanh điệu đúng · ${lessons[session.lessonIndex].focus}`;
+      card.choices.forEach((choice, index) => {
+        const button = answerButtons[index];
+        button.querySelector('.answer-pinyin').textContent = choice;
+        button.querySelector('.answer-tone').textContent = `Thanh ${index + 1}`;
+        button.dataset.answer = choice;
+        button.className = 'answer';
+        button.style.borderColor = '';
+        button.style.background = '';
+        button.disabled = false;
+        button.setAttribute('aria-pressed', 'false');
+      });
+      const state = srs.get(card.key);
+      setFeedback(state
+        ? `Thẻ đã luyện ${state.reps} lần · lần tới cách ${state.interval || 0} ngày. Chọn một đáp án để tiếp tục.`
+        : 'Thẻ mới. Chọn một đáp án để tiếp tục.', '');
+      nextButton.disabled = true;
+      nextLabel.textContent = 'Kiểm tra đáp án';
+      progressFill.style.width = `${Math.round((session.finished / session.target) * 100)}%`;
+      progress.setAttribute('aria-valuemin', '0');
+      progress.setAttribute('aria-valuemax', String(session.target));
+      progress.setAttribute('aria-valuenow', String(session.finished));
+      renderSessionMix();
+    }
+
+    function startSession(lessonIndex) {
+      currentLessonIndex = lessonIndex;
+      buildSession(lessonIndex);
+      sessionComplete = false;
+      sessionPronunciation.clear();
+      updateRoadmap();
+      renderQuestion();
+    }
+
+    function checkAnswer() {
+      const card = currentCard();
+      const isCorrect = selectedAnswer === card.answer;
+      answered = true;
+      answerButtons.forEach((button) => {
+        button.disabled = true;
+        button.style.borderColor = '';
+        button.style.background = '';
+        if (button.dataset.answer === card.answer) button.classList.add('correct');
+        else if (button.dataset.answer === selectedAnswer) button.classList.add('incorrect');
+      });
+
+      if (session.graded.has(card.key)) {
+        // Thẻ quay lại trong cùng phiên: chỉ luyện lại, điểm SM-2 đã chốt ở lần đầu.
+        setFeedback(isCorrect
+          ? `Đúng rồi. ${card.answer} · ${describeCard(card)}.`
+          : `Vẫn chưa đúng. Đáp án là ${card.answer} · ${describeCard(card)}.`, isCorrect ? 'good' : 'bad');
+      } else {
+        session.graded.add(card.key);
+        const grade = isCorrect ? (bestPronunciation(card.key) >= 80 ? 5 : 4) : 1;
+        if (isCorrect) session.correct += 1;
+        const state = gradeCard(card.key, grade);
+        setFeedback(isCorrect
+          ? `Chính xác! ${card.answer} · ${describeCard(card)} · ôn lại sau ${state.interval} ngày.`
+          : `Đáp án là ${card.answer} · ${describeCard(card)}. Thẻ này sẽ quay lại ngay trong phiên.`, isCorrect ? 'good' : 'bad');
+        updateRoadmap();
+      }
+
+      nextLabel.textContent = session.queue.length === 1 && isCorrect ? 'Hoàn tất phiên' : 'Thẻ tiếp theo';
+      renderSessionMix();
+    }
+
+    function finishSession() {
+      sessionComplete = true;
+      answered = true;
+      answerButtons.forEach((button) => { button.disabled = true; });
+      progressFill.style.width = '100%';
+      progress.setAttribute('aria-valuenow', String(session.target));
+      const lesson = lessons[session.lessonIndex];
+      const lessonDone = lessonIsComplete(lesson);
+      const remaining = lesson.cards.length - lessonPracticedCount(lesson);
+      if (lessonDone) unlockFloor = Math.max(unlockFloor, Math.min(lessons.length - 1, session.lessonIndex + 1));
+      saveSrs();
+      updateRoadmap();
+      const accuracy = Math.round((session.correct / session.target) * 100);
+      const headline = `Xong phiên: ${session.correct}/${session.target} thẻ đúng ngay lần đầu (${accuracy}%).`;
+      setFeedback(lessonDone
+        ? `${headline} Bài ${session.lessonIndex + 1} đã phủ hết ${lesson.cards.length} thẻ.`
+        : `${headline} Bài này còn ${remaining} thẻ chưa luyện.`, 'good');
+      nextLabel.textContent = lessonDone && session.lessonIndex < lessons.length - 1
+        ? `Sang bài ${session.lessonIndex + 2}`
+        : 'Phiên tiếp theo';
+      nextButton.disabled = false;
+      renderSessionMix();
+    }
+
+    function advanceQueue() {
+      const card = currentCard();
+      const wasCorrect = selectedAnswer === card.answer;
+      session.queue.shift();
+      if (wasCorrect) session.finished += 1;
+      else session.queue.splice(Math.min(RELEARN_GAP, session.queue.length), 0, card.key);
+      if (session.queue.length === 0) finishSession();
+      else renderQuestion();
+    }
+
+    /* ===================== Sự kiện ===================== */
+    answerButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        if (answered) return;
+        selectedAnswer = button.dataset.answer;
+        answerButtons.forEach((item) => {
+          item.setAttribute('aria-pressed', String(item === button));
+          item.style.borderColor = item === button ? 'var(--teal)' : '';
+          item.style.background = item === button ? 'var(--mint)' : '';
+        });
+        nextButton.disabled = false;
+        nextLabel.textContent = 'Kiểm tra đáp án';
+        playPinyin(selectedAnswer);
+      });
+    });
+
+    nextButton.addEventListener('click', () => {
+      if (sessionComplete) {
+        const lesson = lessons[session.lessonIndex];
+        const nextIndex = lessonIsComplete(lesson) && session.lessonIndex < lessons.length - 1
+          ? session.lessonIndex + 1
+          : session.lessonIndex;
+        startSession(nextIndex);
+        document.querySelector('#practice').scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+      if (!selectedAnswer) return;
+      if (!answered) {
+        checkAnswer();
+        return;
+      }
+      advanceQueue();
+      if (!sessionComplete) playPinyin(currentCard().answer);
+    });
+
+    document.querySelectorAll('.pronunciation-reference').forEach((button) => {
+      button.addEventListener('click', playReferenceSample);
+    });
+    document.querySelectorAll('.pronunciation-record').forEach((button) => {
+      button.addEventListener('click', togglePronunciationRecording);
+    });
+    document.querySelector('#listen-button').addEventListener('click', () => playPinyin(currentCard().answer));
+    document.querySelector('#close-tone-dialog').addEventListener('click', () => toneDialog.close());
+    toneDialog.addEventListener('click', (event) => {
+      if (event.target === toneDialog) toneDialog.close();
+    });
+    document.querySelector('.text-link').addEventListener('click', (event) => {
+      event.preventDefault();
+      setPanel('practice');
+      document.querySelector('#practice').scrollIntoView({ behavior: 'smooth' });
+      document.querySelector('#listen-button').focus({ preventScroll: true });
+    });
+
+    /* Một cây DOM duy nhất: trên mobile các khối được lọc bằng CSS theo body[data-panel]. */
+    function setPanel(panel) {
+      document.body.dataset.panel = panel;
+      tabbar.querySelectorAll('button').forEach((button) => {
+        if (button.dataset.tab === panel) button.setAttribute('aria-current', 'page');
+        else button.removeAttribute('aria-current');
+      });
+    }
+
+    tabbar.addEventListener('click', (event) => {
+      const button = event.target.closest('button[data-tab]');
+      if (!button) return;
+      setPanel(button.dataset.tab);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    document.querySelectorAll('.topnav a').forEach((link) => {
+      link.addEventListener('click', () => setPanel(link.getAttribute('href') === '#library' ? 'library' : 'practice'));
+    });
+
+    function createSyllableButton(syllable, query) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = `syllable-button${query ? ' match' : ''}`;
+      button.textContent = syllable;
+      button.setAttribute('aria-label', `Nghe ${syllable}`);
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.syllable-button.active').forEach((item) => item.classList.remove('active'));
+        button.classList.add('active');
+        openToneDialog(syllable);
+      });
+      return button;
+    }
+
+    function renderMatrix() {
+      const query = document.querySelector('#sound-search').value.trim().toLowerCase();
+      const matrixHead = document.querySelector('#matrix-head');
+      const matrixBody = document.querySelector('#matrix-body');
+      const matrixTable = document.querySelector('#pinyin-matrix');
+      const groupedList = document.querySelector('#grouped-list');
+      const emptyState = document.querySelector('#matrix-empty');
+      const count = document.querySelector('#matrix-count');
+      const sortedInitials = [...initials].sort((first, second) => second.length - first.length);
+      const cellsByRow = pinyinRows.map((row) => {
+        const cells = new Map();
+        for (const syllable of row.syllables.split(' ')) {
+          const initial = sortedInitials.find((candidate) => syllable.startsWith(candidate)) || '';
+          cells.set(initial, syllable);
+        }
+        return { ...row, cells };
+      });
+      const visibleRows = cellsByRow.filter((row) => [...row.cells.values()].some((syllable) => !query || syllable.includes(query)));
+      const resultCount = visibleRows.reduce((total, row) => total + [...row.cells.values()].filter((syllable) => !query || syllable.includes(query)).length, 0);
+
+      if (!matrixHead.dataset.ready) {
+        const zeroOnset = document.createElement('th');
+        zeroOnset.scope = 'col';
+        zeroOnset.className = 'zero-onset';
+        zeroOnset.textContent = '∅';
+        zeroOnset.title = 'Không có phụ âm đầu';
+        matrixHead.append(zeroOnset);
+        initials.forEach((initial) => {
+          const heading = document.createElement('th');
+          heading.scope = 'col';
+          heading.textContent = initial;
+          matrixHead.append(heading);
+        });
+        matrixHead.dataset.ready = 'true';
+      }
+
+      matrixBody.replaceChildren();
+      groupedList.replaceChildren();
+      matrixTable.hidden = visibleRows.length === 0;
+      emptyState.hidden = visibleRows.length > 0;
+      count.textContent = query ? `${resultCount} kết quả` : `${resultCount} âm tiết · ${pinyinRows.length} vần`;
+
+      visibleRows.forEach((row) => {
+        const syllables = row.syllables.split(' ').filter((syllable) => !query || syllable.includes(query));
+        const tableRow = document.createElement('tr');
+        const rowHeading = document.createElement('th');
+        rowHeading.scope = 'row';
+        rowHeading.textContent = row.final;
+        tableRow.append(rowHeading);
+
+        ['', ...initials].forEach((initial) => {
+          const syllable = row.cells.get(initial);
+          const cell = document.createElement('td');
+          if (syllable && (!query || syllable.includes(query))) {
+            cell.append(createSyllableButton(syllable, query));
+          }
+          tableRow.append(cell);
+        });
+        matrixBody.append(tableRow);
+
+        const group = document.createElement('section');
+        const heading = document.createElement('h3');
+        const list = document.createElement('div');
+        group.className = 'final-group';
+        heading.textContent = row.final;
+        list.className = 'syllable-list';
+        syllables.forEach((syllable) => list.append(createSyllableButton(syllable, query)));
+        group.append(heading, list);
+        groupedList.append(group);
+      });
+    }
+
+    document.querySelector('#sound-search').addEventListener('input', renderMatrix);
+    const library = document.querySelector('#library');
+    const viewButtons = [...document.querySelectorAll('.view-switch button')];
+    function setChartView(view) {
+      library.dataset.view = view;
+      viewButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.view === view)));
+    }
+    viewButtons.forEach((button) => button.addEventListener('click', () => setChartView(button.dataset.view)));
+    if (window.matchMedia('(max-width: 760px)').matches) setChartView('grouped');
+
+    const projectionButton = document.querySelector('#projection-button');
+    function updateProjectionButton() {
+      const isActive = document.body.classList.contains('classroom-mode');
+      projectionButton.setAttribute('aria-pressed', String(isActive));
+      document.querySelector('#projection-label').textContent = isActive ? 'Thoát trình chiếu' : 'Trình chiếu';
+      projectionButton.title = isActive ? 'Thoát chế độ trình chiếu' : 'Mở chế độ trình chiếu';
+    }
+    projectionButton.addEventListener('click', async () => {
+      const isActive = document.body.classList.contains('classroom-mode');
+      if (isActive) {
+        document.body.classList.remove('classroom-mode');
+        if (document.fullscreenElement) await document.exitFullscreen().catch(() => {});
+      } else {
+        setChartView('matrix');
+        document.body.classList.add('classroom-mode');
+        try {
+          await document.documentElement.requestFullscreen?.();
+        } catch {}
+      }
+      updateProjectionButton();
+    });
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement) document.body.classList.remove('classroom-mode');
+      updateProjectionButton();
+    });
+
+    /* ===================== Khởi động ===================== */
+    const openingLesson = (() => {
+      const index = lessons.findIndex((lesson) => !lessonIsComplete(lesson));
+      return index === -1 ? lessons.length - 1 : Math.min(index, maxUnlockedIndex());
+    })();
+    setPanel('practice');
+    startSession(openingLesson);
+    renderMatrix();
+  </script>
+</body>
+</html>
