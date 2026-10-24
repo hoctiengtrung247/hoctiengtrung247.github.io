@@ -1,4 +1,4 @@
-<!doctype html>
+var e=`<!doctype html>
 <html lang="vi">
 <head>
 <meta charset="utf-8">
@@ -317,6 +317,7 @@ footer {
     });
   });
 })();
-</script>
+<\/script>
 </body>
 </html>
+`;export{e as default};
